@@ -1,5 +1,3 @@
-#spring.application.name=hatin
-
 spring:
   application:
     name: hatin
@@ -11,9 +9,11 @@ spring:
     password: 1234
 
   jpa:
-    database: mysql
-    database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
       ddl-auto: create
     show-sql: true
-
+    defer-datasource-initialization: true
+    open-in-view: false
+  web:
+    resources:
+      add-mappings: false
