@@ -9,6 +9,6 @@ hatin은 '하'루루'틴'의 줄인 말이며 생활패턴 추천 비서의 역�
 + Back-End repository 입니다. <br>
 
 ## ⚙️기술 스택
-<img src="https://img.shields.io/badge/style=flat-square&logo=amazonec2&logoColor=white"/><img src="https://img.shields.io/badge/style=flat-square&logo=mysql&logoColor=white"/><img src="https://img.shields.io/badge/style=flat-square&logo=Spring&logoColor=white"/><img src="https://img.shields.io/badge/style=flat-square&logo=springboot&logoColor=white"/>
+<img src="https://img.shields.io/badge/?style=flat-square&logo=amazonec2&logoColor=white"/><img src="https://img.shields.io/badge/?style=flat-square&logo=mysql&logoColor=white"/><img src="https://img.shields.io/badge/?style=flat-square&logo=Spring&logoColor=white"/><img src="https://img.shields.io/badge/?style=flat-square&logo=springboot&logoColor=white"/>
 
 
