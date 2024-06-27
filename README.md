@@ -11,7 +11,7 @@ hatin은 '하'루루'틴'의 줄인 말이며 생활패턴 추천 비서의 역�
 ## ⚙️기술 스택
 <table>
   <tr>
-    <th scope="col">서버</th>
+    <th scope="col">Amazon EC2</th>
     <th scope="col">Mysql</th>
     <th scope="col">Spring</th>
     <th scope="col">SpringBoot</th>
