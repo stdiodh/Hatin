@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/api/ban")
 class BanController {
-    @Operation(summary = "스웨거 테스트 API", description = "스웨거 테스트 API 입니다.")
+    @Operation(summary = "Get Test API", description = "This is GET API")
     @GetMapping("/test")
     private fun join() :
             ResponseEntity<String> {
