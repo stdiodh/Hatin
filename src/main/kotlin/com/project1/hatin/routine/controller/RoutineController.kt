@@ -29,7 +29,7 @@ class RoutineController {
 //    @GetMapping
 //    private fun showAllRoutine(@Parameter(description = "헤더에 담긴 유저정보") @AuthenticationPrincipal userInfo: CustomUserDetails)
 //    : ResponseEntity<BaseResponse<List<ShowResponseDTO>>>{
-//        val result = routineService.showList(userInfo)
+//        val result = routineService.showRoutineList(userInfo)
 //        return ResponseEntity.status(HttpStatus.OK).body(BaseResponse(data = result))
 //    }
 
@@ -37,7 +37,7 @@ class RoutineController {
     @PostMapping
     private fun postRoutine(@Parameter(description = "사용자가 생성하는 루틴 데이터") @Valid @RequestBody createRequestDTO: CreateRequestDTO)
      : ResponseEntity<BaseResponse<CreateResponseDTO>> {
-        val result = routineService.create(createRequestDTO)
+        val result = routineService.createRoutine(createRequestDTO)
         return ResponseEntity.status(HttpStatus.CREATED).body(BaseResponse(data = result))
     }
 
@@ -46,8 +46,16 @@ class RoutineController {
     private fun patchRoutine(@Parameter(required = true,description = "루틴 ID") @PathVariable(name = "id") id : Long,
                              @Parameter(description = "사용자가 수정하는 루틴 데이터") @Valid @RequestBody patchRequestDTO: PatchRequestDTO )
     : ResponseEntity<BaseResponse<PatchResponseDTO>> {
-        val result = routineService.patch(id,patchRequestDTO)
+        val result = routineService.patchRoutine(id,patchRequestDTO)
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponse(data = result))
+    }
+
+    @Operation(summary = "사용자 루틴 삭제", description = "사용자 루틴 삭제")
+    @DeleteMapping("/{id}")
+    private fun deleteRoutine(@Parameter(required = true,description = "루틴 ID") @PathVariable(name = "id") id : Long)
+            : ResponseEntity<BaseResponse<Any>> {
+        routineService.deleteRoutine(id)
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponse(data = null))
     }
 
 

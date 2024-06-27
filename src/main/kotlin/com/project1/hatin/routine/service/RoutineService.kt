@@ -20,11 +20,11 @@ class RoutineService{
     @Autowired
     private lateinit var routineRepository: RoutineRepository
 
-//    fun showList(userInfo : CustomUserDetails): List<ShowResponseDTO> {
+//    fun showRoutineList(userInfo : CustomUserDetails): List<ShowResponseDTO> {
 //
 //    }
 
-    fun create(createRequestDTO: CreateRequestDTO): CreateResponseDTO {
+    fun createRoutine(createRequestDTO: CreateRequestDTO): CreateResponseDTO {
 
         val routine = Routine(
             startAt = createRequestDTO.startAt,
@@ -44,7 +44,7 @@ class RoutineService{
             )
     }
 
-    fun patch(id: Long,patchRequestDTO: PatchRequestDTO): PatchResponseDTO {
+    fun patchRoutine(id: Long,patchRequestDTO: PatchRequestDTO): PatchResponseDTO {
 
         var target : Routine = routineRepository.findByIdOrNull(id)
             ?: throw PostException(msg = "존재하지 않는 루틴 ID입니다.")
@@ -63,6 +63,13 @@ class RoutineService{
             name =  target.name,
             weekDay =  target.weekDay
         )
+    }
+
+    fun deleteRoutine(id: Long){
+        var target : Routine = routineRepository.findByIdOrNull(id)
+            ?: throw PostException(msg = "존재하지 않는 루틴 ID입니다.")
+
+        routineRepository.deleteById(id)
     }
 
 }

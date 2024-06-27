@@ -17,6 +17,6 @@ spring:
   web:
     resources:
       add-mappings: false
-logging:
-  level:
-    root: DEBUG
+#logging:
+#  level:
+#    root: DEBUG
