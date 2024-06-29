@@ -34,6 +34,8 @@ dependencies {
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
 	// validation
 	implementation("org.springframework.boot:spring-boot-starter-validation:3.3.1")
+	// security
+	implementation("org.springframework.boot:spring-boot-starter-security")
 	//jjwp 의존성 추가
 	implementation("io.jsonwebtoken:jjwt-api:0.12.5")
 	runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.5")

@@ -1,4 +1,6 @@
 package com.project1.hatin.common.dto
 
-class TokenInfo {
-}
+class TokenInfo (
+    val grantType : String,
+    val accessToken : String,
+)
