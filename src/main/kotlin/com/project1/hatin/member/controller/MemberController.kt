@@ -1,6 +1,8 @@
 package com.project1.hatin.member.controller
 
 import com.project1.hatin.common.dto.BaseResponse
+import com.project1.hatin.common.dto.TokenInfo
+import com.project1.hatin.member.dto.LoginDto
 import com.project1.hatin.member.dto.MemberRequestDto
 import com.project1.hatin.member.service.MemberService
 import jakarta.validation.Valid
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController
 class MemberController (
     private val memberService: MemberService
 ){
+    //회원가입 api
     @PostMapping("/join")
     private fun signUp(@Valid @RequestBody memberRequestDto: MemberRequestDto)
     : ResponseEntity<BaseResponse<String>>{
@@ -24,4 +27,12 @@ class MemberController (
             .body(BaseResponse(data = result))
     }
 
+    //로그인 api
+    @PostMapping("/login")
+    private fun login(@Valid @RequestBody loginDto: LoginDto)
+    : ResponseEntity<BaseResponse<TokenInfo>>{
+        val tokenInfo = memberService.login(loginDto)
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(BaseResponse(data = tokenInfo))
+    }
 }
