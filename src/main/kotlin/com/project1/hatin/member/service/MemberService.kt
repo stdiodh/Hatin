@@ -10,10 +10,12 @@ import com.project1.hatin.member.entity.Member
 import com.project1.hatin.member.entity.MemberRole
 import com.project1.hatin.member.repository.MemberRepository
 import com.project1.hatin.member.repository.MemberRoleRepository
+import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.transaction.Transactional
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.stereotype.Service
+@Tag(name = "회원 Api 컨트롤러", description = "회원 가입, 로그인, Api 명세서 입니다.")
 
 @Transactional
 @Service
