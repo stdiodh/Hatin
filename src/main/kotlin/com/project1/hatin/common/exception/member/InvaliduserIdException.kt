@@ -1,4 +1,4 @@
-package com.project1.hatin.common.exception
+package com.project1.hatin.common.exception.member
 
 class InvaliduserIdException (
     val fieldName : String = "",
