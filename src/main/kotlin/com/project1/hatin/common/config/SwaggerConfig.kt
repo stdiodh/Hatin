@@ -17,8 +17,8 @@ class SwaggerConfig {
 
     private fun configurationInfo(): Info {
         return Info()
-            .title("OpenAPI3 UI 테스트")
-            .description("OpenAPI3 - Springdoc을 사용한 Swagger UI 테스트")
+            .title("Hatin API 명세서")
+            .description("OpenAPI3 - Springdoc을 사용한 Swagger UI")
             .version("1.0.0")
     }
 }
