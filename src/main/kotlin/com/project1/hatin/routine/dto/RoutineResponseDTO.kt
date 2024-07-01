@@ -14,6 +14,10 @@ class RoutineResponseDTO {
         var name: String,
 
         var weekDay: DayOfWeek,
+
+        var memo: String,
+
+        var isFinish: Boolean,
     )
 
     data class PatchResponseDTO(
@@ -26,6 +30,10 @@ class RoutineResponseDTO {
         var name: String,
 
         var weekDay: DayOfWeek,
+
+        var memo: String,
+
+        var isFinish: Boolean,
     )
 
     data class ShowResponseDTO(
@@ -38,5 +46,9 @@ class RoutineResponseDTO {
         var name: String,
 
         var weekDay: DayOfWeek,
+
+        var memo: String,
+
+        var isFinish: Boolean,
     )
 }

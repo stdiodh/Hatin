@@ -30,7 +30,9 @@ class RoutineService{
             startAt = createRequestDTO.startAt,
             finishAt = createRequestDTO.finishAt,
             name = createRequestDTO.name,
-            weekDay = createRequestDTO.weekDay
+            weekDay = createRequestDTO.weekDay,
+            memo = createRequestDTO.memo,
+            isFinish = false
         )
 
         val result = routineRepository.save(routine)
@@ -40,7 +42,9 @@ class RoutineService{
             startAt =  result.startAt,
             finishAt =  result.finishAt,
             name =  result.name,
-            weekDay =  result.weekDay
+            weekDay =  result.weekDay,
+            memo = result.memo,
+            isFinish = result.isFinish
             )
     }
 
@@ -53,6 +57,8 @@ class RoutineService{
         target.startAt = patchRequestDTO.startAt
         target.finishAt = patchRequestDTO.finishAt
         target.weekDay = patchRequestDTO.weekDay
+        target.memo = patchRequestDTO.memo
+        target.isFinish = patchRequestDTO.isFinish
 
         target = routineRepository.save(target)
 
@@ -61,7 +67,9 @@ class RoutineService{
             startAt =  target.startAt,
             finishAt =  target.finishAt,
             name =  target.name,
-            weekDay =  target.weekDay
+            weekDay =  target.weekDay,
+            memo = target.memo,
+            isFinish = target.isFinish
         )
     }
 

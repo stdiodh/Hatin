@@ -17,7 +17,12 @@ class Routine(
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    var weekDay: DayOfWeek
+    var weekDay: DayOfWeek,
 
-) : BaseEntity() {
-}
+    @Column(nullable = false)
+    var isFinish: Boolean,
+
+    @Column
+    var memo: String
+
+) : BaseEntity()

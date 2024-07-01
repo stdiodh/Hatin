@@ -23,6 +23,8 @@ class RoutineRequestDTO {
         val name: String,
         @field:ValidEnum(enumClass = DayOfWeek::class, message = "올바른 요일을 선택하세요!")
         val weekDay: DayOfWeek,
+
+        val memo: String,
     )
 
     data class PatchRequestDTO(
@@ -42,5 +44,9 @@ class RoutineRequestDTO {
         val name: String,
         @field:ValidEnum(enumClass = DayOfWeek::class, message = "올바른 요일을 선택하세요!")
         val weekDay: DayOfWeek,
+
+        val memo: String,
+
+        val isFinish: Boolean,
     )
 }

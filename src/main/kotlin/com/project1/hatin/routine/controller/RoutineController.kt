@@ -57,6 +57,4 @@ class RoutineController {
         routineService.deleteRoutine(id)
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponse(data = null))
     }
-
-
 }
