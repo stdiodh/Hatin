@@ -3,9 +3,9 @@ package com.project1.hatin.common.dto
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.User
 
-class CustomUser(
+class CustomUser (
     val id : Long,
-    email : String,
+    userId : String,
     password : String,
-    authorities : Collection<GrantedAuthority>
-) : User(email, password, authorities)
+    authority : Collection<GrantedAuthority>,
+) : User(userId, password, authority)
