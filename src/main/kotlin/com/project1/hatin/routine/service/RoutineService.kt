@@ -17,14 +17,10 @@ import org.springframework.stereotype.Service
 
 @Service
 @Transactional
-class RoutineService{
-
-    @Autowired
-    private lateinit var routineRepository: RoutineRepository
-
-    @Autowired
-    private lateinit var memberRepository: MemberRepository
-
+class RoutineService(
+    private val routineRepository: RoutineRepository,
+    private val memberRepository: MemberRepository
+){
     fun showRoutineList(userInfo : CustomUser): List<ShowResponseDTO> {
         var targetUser = memberRepository.findByIdOrNull(userInfo.id)
             ?: throw PostException(msg = "존재하지 않는 사용자입니다.")
@@ -47,9 +43,7 @@ class RoutineService{
             )
             result.add(dto)
         }
-
         return result
-
     }
 
     fun createRoutine(createRequestDTO: CreateRequestDTO): CreateResponseDTO {

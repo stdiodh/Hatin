@@ -23,11 +23,9 @@ import org.springframework.web.bind.annotation.*
 @Tag(name = "루틴 Api 컨트롤러", description = "루틴생성, 조회, 수정, 삭제 Api 명세서입니다.")
 @RestController
 @RequestMapping("/api/routine")
-class RoutineController {
-
-    @Autowired
-    private lateinit var routineService: RoutineService
-
+class RoutineController(
+     private val routineService: RoutineService
+){
 
     @Operation(summary = "사용자 루틴 전체 조회", description = "사용자 루틴 전체 조회")
     @SecurityRequirement(name = "bearerAuth")
