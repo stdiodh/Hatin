@@ -1,10 +1,14 @@
-package com.project1.hatin.member.controller
+package com.project1.hatin.common.config.member.controller
 
 import com.project1.hatin.common.dto.BaseResponse
 import com.project1.hatin.common.dto.TokenInfo
-import com.project1.hatin.member.dto.LoginDto
-import com.project1.hatin.member.dto.MemberRequestDto
-import com.project1.hatin.member.service.MemberService
+import com.project1.hatin.common.config.member.dto.LoginDto
+import com.project1.hatin.common.config.member.dto.MemberDto
+import com.project1.hatin.common.config.member.dto.MemberRequestDto
+import com.project1.hatin.common.config.member.service.MemberService
+import com.project1.hatin.routine.dto.RoutineRequestDTO.CreateRequestDTO
+import com.project1.hatin.routine.dto.RoutineResponseDTO.CreateResponseDTO
+import io.swagger.v3.oas.annotations.Parameter
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -23,6 +27,16 @@ class MemberController (
     private fun signUp(@Valid @RequestBody memberRequestDto: MemberRequestDto)
     : ResponseEntity<BaseResponse<String>>{
         val result = memberService.signUp(memberRequestDto)
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .body(BaseResponse(data = result))
+    }
+
+    //회원가입 - 루틴 저장 api
+    @PostMapping("/join2")
+    private fun signUpRoutine(@Parameter(description = "사용자가 회원가입 정보 데이터") @Valid @RequestBody signUpRoutineRequest: MemberDto.SignUpRoutineRequest
+    )
+            : ResponseEntity<BaseResponse<String>>{
+        val result = memberService.signUp2(signUpRoutineRequest.memberRequestDto,signUpRoutineRequest.createRequestDTOList)
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(BaseResponse(data = result))
     }

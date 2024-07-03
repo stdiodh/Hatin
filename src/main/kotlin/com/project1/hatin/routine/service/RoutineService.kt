@@ -1,6 +1,8 @@
 package com.project1.hatin.routine.service
 
+import com.project1.hatin.common.dto.CustomUser
 import com.project1.hatin.common.exception.PostException
+import com.project1.hatin.common.config.member.repository.MemberRepository
 import com.project1.hatin.routine.dto.RoutineRequestDTO.PatchRequestDTO
 import com.project1.hatin.routine.dto.RoutineRequestDTO.CreateRequestDTO
 import com.project1.hatin.routine.dto.RoutineResponseDTO.PatchResponseDTO
@@ -20,9 +22,35 @@ class RoutineService{
     @Autowired
     private lateinit var routineRepository: RoutineRepository
 
-//    fun showRoutineList(userInfo : CustomUserDetails): List<ShowResponseDTO> {
-//
-//    }
+    @Autowired
+    private lateinit var memberRepository: MemberRepository
+
+    fun showRoutineList(userInfo : CustomUser): List<ShowResponseDTO> {
+        var targetUser = memberRepository.findByIdOrNull(userInfo.id)
+            ?: throw PostException(msg = "존재하지 않는 사용자입니다.")
+
+        var targetRoutine = targetUser.routineList
+            ?: throw PostException(msg = "사용자가 작성한 루틴이 존재하지 않습니다.")
+
+        // 결과 리스트 생성 및 루틴 변환
+        val result = mutableListOf<ShowResponseDTO>()
+
+        for (routine in targetRoutine) {
+            val dto = ShowResponseDTO(
+                id = routine.id!!,
+                startAt = routine.startAt,
+                finishAt = routine.finishAt,
+                name = routine.name,
+                weekDay = routine.weekDay,
+                isFinish = routine.isFinish,
+                memo = routine.memo
+            )
+            result.add(dto)
+        }
+
+        return result
+
+    }
 
     fun createRoutine(createRequestDTO: CreateRequestDTO): CreateResponseDTO {
 
@@ -46,6 +74,26 @@ class RoutineService{
             memo = result.memo,
             isFinish = result.isFinish
             )
+    }
+
+    fun createRoutineList(createRequestDTOList: List<CreateRequestDTO>): List<Routine> {
+
+        var createRoutineList = mutableListOf<Routine>()
+
+        for (dto in createRequestDTOList) {
+            val routine = Routine(
+                startAt = dto.startAt,
+                finishAt = dto.finishAt,
+                name = dto.name,
+                weekDay = dto.weekDay,
+                memo = dto.memo,
+                isFinish = false
+            )
+            createRoutineList.add(routine)
+        }
+        createRoutineList = routineRepository.saveAll(createRoutineList)
+
+        return createRoutineList
     }
 
     fun patchRoutine(id: Long,patchRequestDTO: PatchRequestDTO): PatchResponseDTO {

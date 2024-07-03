@@ -1,6 +1,7 @@
 package com.project1.hatin.routine.controller
 
 import com.project1.hatin.common.dto.BaseResponse
+import com.project1.hatin.common.dto.CustomUser
 import com.project1.hatin.routine.dto.RoutineRequestDTO.CreateRequestDTO
 import com.project1.hatin.routine.dto.RoutineRequestDTO.PatchRequestDTO
 import com.project1.hatin.routine.dto.RoutineResponseDTO.CreateResponseDTO
@@ -9,11 +10,13 @@ import com.project1.hatin.routine.dto.RoutineResponseDTO.ShowResponseDTO
 import com.project1.hatin.routine.service.RoutineService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
+import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 
 
@@ -25,13 +28,15 @@ class RoutineController {
     @Autowired
     private lateinit var routineService: RoutineService
 
-//    @Operation(summary = "사용자 루틴 전체 조회", description = "사용자 루틴 전체 조회")
-//    @GetMapping
-//    private fun showAllRoutine(@Parameter(description = "헤더에 담긴 유저정보") @AuthenticationPrincipal userInfo: CustomUserDetails)
-//    : ResponseEntity<BaseResponse<List<ShowResponseDTO>>>{
-//        val result = routineService.showRoutineList(userInfo)
-//        return ResponseEntity.status(HttpStatus.OK).body(BaseResponse(data = result))
-//    }
+
+    @Operation(summary = "사용자 루틴 전체 조회", description = "사용자 루틴 전체 조회")
+    @SecurityRequirement(name = "bearerAuth")
+    @GetMapping
+    private fun showAllRoutine(@Parameter(description = "헤더에 담긴 유저정보") @AuthenticationPrincipal userInfo: CustomUser)
+            : ResponseEntity<Any>{
+        val result = routineService.showRoutineList(userInfo)
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponse(data = result))
+    }
 
     @Operation(summary = "사용자 루틴 생성", description = "사용자 루틴 생성")
     @PostMapping
