@@ -37,10 +37,12 @@ class RoutineController(
     }
 
     @Operation(summary = "사용자 루틴 생성", description = "사용자 루틴 생성")
+    @SecurityRequirement(name = "bearerAuth")
     @PostMapping
-    private fun postRoutine(@Parameter(description = "사용자가 생성하는 루틴 데이터") @Valid @RequestBody createRequestDTO: CreateRequestDTO)
+    private fun postRoutine(@Parameter(description = "사용자가 생성하는 루틴 데이터") @Valid @RequestBody createRequestDTO: CreateRequestDTO,
+                            @Parameter(description = "헤더에 담긴 유저정보") @AuthenticationPrincipal userInfo: CustomUser)
      : ResponseEntity<BaseResponse<CreateResponseDTO>> {
-        val result = routineService.createRoutine(createRequestDTO)
+        val result = routineService.createRoutine(createRequestDTO,userInfo)
         return ResponseEntity.status(HttpStatus.CREATED).body(BaseResponse(data = result))
     }
 

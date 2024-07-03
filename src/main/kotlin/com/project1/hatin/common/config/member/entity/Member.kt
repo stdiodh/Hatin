@@ -40,6 +40,6 @@ class Member (
     val role : List<MemberRole>? = null,
 
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
-    var routineList : List<Routine>? = null
+    var routineList: MutableList<Routine> = mutableListOf()
 
     ) : BaseEntity()

@@ -22,10 +22,10 @@ class RoutineService(
     private val memberRepository: MemberRepository
 ){
     fun showRoutineList(userInfo : CustomUser): List<ShowResponseDTO> {
-        var targetUser = memberRepository.findByIdOrNull(userInfo.id)
+        val targetUser = memberRepository.findByIdOrNull(userInfo.id)
             ?: throw PostException(msg = "존재하지 않는 사용자입니다.")
 
-        var targetRoutine = targetUser.routineList
+        val targetRoutine = targetUser.routineList
             ?: throw PostException(msg = "사용자가 작성한 루틴이 존재하지 않습니다.")
 
         // 결과 리스트 생성 및 루틴 변환
@@ -46,7 +46,9 @@ class RoutineService(
         return result
     }
 
-    fun createRoutine(createRequestDTO: CreateRequestDTO): CreateResponseDTO {
+    fun createRoutine(createRequestDTO: CreateRequestDTO, userInfo: CustomUser): CreateResponseDTO {
+        val targetUser = memberRepository.findByIdOrNull(userInfo.id)
+            ?: throw PostException(msg = "존재하지 않는 사용자입니다.")
 
         val routine = Routine(
             startAt = createRequestDTO.startAt,
@@ -59,6 +61,9 @@ class RoutineService(
 
         val result = routineRepository.save(routine)
 
+        targetUser.routineList.add(result)
+        memberRepository.save(targetUser)
+
         return CreateResponseDTO(
             id =  result.id,
             startAt =  result.startAt,
@@ -70,7 +75,7 @@ class RoutineService(
             )
     }
 
-    fun createRoutineList(createRequestDTOList: List<CreateRequestDTO>): List<Routine> {
+    fun createRoutineList(createRequestDTOList: List<CreateRequestDTO>): MutableList<Routine> {
 
         var createRoutineList = mutableListOf<Routine>()
 
