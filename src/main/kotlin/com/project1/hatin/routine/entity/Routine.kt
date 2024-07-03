@@ -26,6 +26,4 @@ class Routine(
     @Column
     var memo: String,
 
-    // 단방향 관계이기 때문에 루틴을 저장한 후 회원정보에 저장한 루틴을 설정하고 저장해야한다.
-
-) : BaseEntity()
+    ) : BaseEntity()

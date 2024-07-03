@@ -31,7 +31,7 @@ class RoutineController(
     @SecurityRequirement(name = "bearerAuth")
     @GetMapping
     private fun showAllRoutine(@Parameter(description = "헤더에 담긴 유저정보") @AuthenticationPrincipal userInfo: CustomUser)
-            : ResponseEntity<Any>{
+            : ResponseEntity<BaseResponse<List<ShowResponseDTO>>>{
         val result = routineService.showRoutineList(userInfo)
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponse(data = result))
     }
@@ -58,8 +58,8 @@ class RoutineController(
     @Operation(summary = "사용자 루틴 삭제", description = "사용자 루틴 삭제")
     @DeleteMapping("/{id}")
     private fun deleteRoutine(@Parameter(required = true,description = "루틴 ID") @PathVariable(name = "id") id : Long)
-            : ResponseEntity<BaseResponse<Any>> {
+            : ResponseEntity<BaseResponse<String>> {
         routineService.deleteRoutine(id)
-        return ResponseEntity.status(HttpStatus.OK).body(BaseResponse(data = null))
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponse(data = "루틴이 삭제되었습니다."))
     }
 }

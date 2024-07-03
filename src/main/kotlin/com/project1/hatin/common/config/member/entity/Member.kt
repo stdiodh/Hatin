@@ -1,6 +1,7 @@
 package com.project1.hatin.common.config.member.entity
 
 
+import com.project1.hatin.ban.entity.BanKeyword
 import com.project1.hatin.common.entity.BaseEntity
 import com.project1.hatin.common.enums.Gender
 import com.project1.hatin.routine.entity.Routine
@@ -40,6 +41,11 @@ class Member (
     val role : List<MemberRole>? = null,
 
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
-    var routineList: MutableList<Routine> = mutableListOf()
+    @JoinColumn(name = "member_id")
+    var routineList: MutableList<Routine> = mutableListOf(),
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
+    @JoinColumn(name = "member_id")
+    var banKeywordList: MutableList<BanKeyword> = mutableListOf(),
 
     ) : BaseEntity()

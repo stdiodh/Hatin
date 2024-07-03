@@ -11,7 +11,6 @@ import com.project1.hatin.routine.dto.RoutineResponseDTO.CreateResponseDTO
 import com.project1.hatin.routine.entity.Routine
 import com.project1.hatin.routine.repository.RoutineRepository
 import jakarta.transaction.Transactional
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 
@@ -26,9 +25,7 @@ class RoutineService(
             ?: throw PostException(msg = "존재하지 않는 사용자입니다.")
 
         val targetRoutine = targetUser.routineList
-            ?: throw PostException(msg = "사용자가 작성한 루틴이 존재하지 않습니다.")
 
-        // 결과 리스트 생성 및 루틴 변환
         val result = mutableListOf<ShowResponseDTO>()
 
         for (routine in targetRoutine) {
