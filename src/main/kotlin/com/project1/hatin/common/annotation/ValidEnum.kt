@@ -31,4 +31,5 @@ class ValidEnumValidator : ConstraintValidator<ValidEnum, Any?> {
 
         return enumValues.any { it.name == value.toString() }
     }
+
 }

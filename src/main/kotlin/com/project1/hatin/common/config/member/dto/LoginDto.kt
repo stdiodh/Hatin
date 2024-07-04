@@ -1,4 +1,4 @@
-package com.project1.hatin.member.dto
+package com.project1.hatin.common.config.member.dto
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import jakarta.validation.constraints.Email
