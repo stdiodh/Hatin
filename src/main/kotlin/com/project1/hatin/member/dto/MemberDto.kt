@@ -7,6 +7,7 @@ import com.project1.hatin.member.entity.Member
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Pattern
+import org.springframework.security.crypto.password.PasswordEncoder
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -28,13 +29,16 @@ data class MemberRequestDto (
 
     @field:NotBlank(message = "생년월일을 입력하세요!")
     @field:Pattern(regexp = "^([12]\\d{3})-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])\$",
-        message = "올바르지 못한 날짜 방식입니다")
+        message = "올바르지 못한 날짜 방식입니다!")
     @JsonProperty("birthday")
     private val _birthday : String,
 
     @field:NotBlank(message = "핸드폰 번호를 입력하세요!")
+    @field:Pattern(regexp = "^01(?:0|1|[6-9])-\\d{3,4}-\\d{4}$",
+        message = "올바르지 못한 핸드폰 번호 입니다!")
     @JsonProperty("phoneNumber")
     private val _phoneNumber : String?,
+
     @field:NotBlank(message = "주소를 입력하세요!")
     @JsonProperty("address")
     private val _address : String,
@@ -59,6 +63,12 @@ data class MemberRequestDto (
     val gender : Gender
         get() = Gender.valueOf(_gender!!)
 
+    //비밀번호 encode
+//    lateinit var encodePW: String
+//
+//    fun encodePW(passwordEncoder: PasswordEncoder) {
+//        encodePW = passwordEncoder.encode(password)
+//    }
 
     private fun String.toLocalDate() : LocalDate =
         LocalDate.parse(this, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
