@@ -48,6 +48,7 @@ class JwtTokenProvider {
             .compact()
     }
 
+
     //토큰 추출
     fun getAuthentication(token : String) : Authentication {
         val claims : Claims = getClaims(token)

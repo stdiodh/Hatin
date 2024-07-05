@@ -22,21 +22,12 @@ import org.springframework.web.bind.annotation.RestController
 class MemberController (
     private val memberService: MemberService
 ){
-    //회원가입 api
-    @PostMapping("/join")
-    private fun signUp(@Valid @RequestBody memberRequestDto: MemberRequestDto)
-    : ResponseEntity<BaseResponse<String>>{
-        val result = memberService.signUp(memberRequestDto)
-        return ResponseEntity.status(HttpStatus.CREATED)
-            .body(BaseResponse(data = result))
-    }
-
     //회원가입 - 루틴 저장 api
-    @PostMapping("/join2")
+    @PostMapping("/join")
     private fun signUpRoutine(@Parameter(description = "사용자가 회원가입 정보 데이터") @Valid @RequestBody signUpRoutineRequest: SignUpRoutineRequest
     )
             : ResponseEntity<BaseResponse<String>>{
-        val result = memberService.signUp2(signUpRoutineRequest.memberRequestDto,signUpRoutineRequest.createRequestDTOList)
+        val result = memberService.signUp(signUpRoutineRequest.memberRequestDto,signUpRoutineRequest.createRequestDTOList)
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(BaseResponse(data = result))
     }
