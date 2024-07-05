@@ -17,6 +17,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 class SecurityConfig(
     private val jwtTokenProvider: JwtTokenProvider
 ) {
+
+    @Bean
+    fun PasswordEncoder() : PasswordEncoder =
+        PasswordEncoderFactories.createDelegatingPasswordEncoder()
+
     @Bean
     fun filterChain(http : HttpSecurity) : SecurityFilterChain {
         http
@@ -40,7 +45,5 @@ class SecurityConfig(
         return http.build()
     }
 
-    @Bean
-    fun passwordEncorder() : PasswordEncoder =
-        PasswordEncoderFactories.createDelegatingPasswordEncoder()
+
 }

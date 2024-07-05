@@ -25,7 +25,7 @@ class CustomUserDetailsService(
         return CustomUser(
             member.id!!,
             member.userId,
-            passwordEncoder.encode(member.password),
+            member.password,
             member.role!!.map { SimpleGrantedAuthority("ROLE_${it.role}") }
         )
     }

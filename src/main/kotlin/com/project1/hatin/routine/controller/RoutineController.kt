@@ -26,8 +26,7 @@ import org.springframework.web.bind.annotation.*
 class RoutineController(
      private val routineService: RoutineService
 ){
-
-    @Operation(summary = "사용자 루틴 전체 조회", description = "사용자 루틴 전체 조회")
+    @Operation(summary = "사용자 루틴 전체 조회", description = "사용자 루틴 전체 조회 API 입니다.")
     @SecurityRequirement(name = "bearerAuth")
     @GetMapping
     private fun showAllRoutine(@Parameter(description = "헤더에 담긴 유저정보") @AuthenticationPrincipal userInfo: CustomUser)
@@ -36,7 +35,7 @@ class RoutineController(
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponse(data = result))
     }
 
-    @Operation(summary = "사용자 루틴 생성", description = "사용자 루틴 생성")
+    @Operation(summary = "사용자 루틴 생성", description = "사용자 루틴 생성 API 입니다.")
     @SecurityRequirement(name = "bearerAuth")
     @PostMapping
     private fun postRoutine(@Parameter(description = "사용자가 생성하는 루틴 데이터") @Valid @RequestBody createRequestDTO: CreateRequestDTO,
@@ -46,7 +45,7 @@ class RoutineController(
         return ResponseEntity.status(HttpStatus.CREATED).body(BaseResponse(data = result))
     }
 
-    @Operation(summary = "사용자 루틴 수정", description = "사용자 루틴 수정")
+    @Operation(summary = "사용자 루틴 수정", description = "사용자 루틴 수정 API 입니다.")
     @PatchMapping("/{id}")
     private fun patchRoutine(@Parameter(required = true,description = "루틴 ID") @PathVariable(name = "id") id : Long,
                              @Parameter(description = "사용자가 수정하는 루틴 데이터") @Valid @RequestBody patchRequestDTO: PatchRequestDTO )
@@ -55,7 +54,7 @@ class RoutineController(
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponse(data = result))
     }
 
-    @Operation(summary = "사용자 루틴 삭제", description = "사용자 루틴 삭제")
+    @Operation(summary = "사용자 루틴 삭제", description = "사용자 루틴 삭제 API 입니다.")
     @DeleteMapping("/{id}")
     private fun deleteRoutine(@Parameter(required = true,description = "루틴 ID") @PathVariable(name = "id") id : Long)
             : ResponseEntity<BaseResponse<String>> {
