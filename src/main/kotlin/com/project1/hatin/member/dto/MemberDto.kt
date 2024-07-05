@@ -1,4 +1,4 @@
-package com.project1.hatin.common.config.member.dto
+package com.project1.hatin.member.dto
 
 import com.project1.hatin.routine.dto.RoutineRequestDTO.CreateRequestDTO
 import jakarta.validation.Valid

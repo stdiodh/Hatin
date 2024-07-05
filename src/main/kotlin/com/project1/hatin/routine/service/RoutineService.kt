@@ -2,7 +2,7 @@ package com.project1.hatin.routine.service
 
 import com.project1.hatin.common.dto.CustomUser
 import com.project1.hatin.common.exception.PostException
-import com.project1.hatin.common.config.member.repository.MemberRepository
+import com.project1.hatin.member.repository.MemberRepository
 import com.project1.hatin.routine.dto.RoutineRequestDTO.PatchRequestDTO
 import com.project1.hatin.routine.dto.RoutineRequestDTO.CreateRequestDTO
 import com.project1.hatin.routine.dto.RoutineResponseDTO.PatchResponseDTO

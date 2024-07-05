@@ -1,8 +1,8 @@
 package com.project1.hatin.common.service
 
 import com.project1.hatin.common.dto.CustomUser
-import com.project1.hatin.common.config.member.entity.Member
-import com.project1.hatin.common.config.member.repository.MemberRepository
+import com.project1.hatin.member.entity.Member
+import com.project1.hatin.member.repository.MemberRepository
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService

@@ -1,15 +1,15 @@
-package com.project1.hatin.common.config.member.service
+package com.project1.hatin.member.service
 
 import com.project1.hatin.common.authority.JwtTokenProvider
 import com.project1.hatin.common.dto.TokenInfo
 import com.project1.hatin.common.enums.Role
 import com.project1.hatin.common.exception.member.InvaliduserIdException
-import com.project1.hatin.common.config.member.dto.LoginDto
-import com.project1.hatin.common.config.member.dto.MemberRequestDto
-import com.project1.hatin.common.config.member.entity.Member
-import com.project1.hatin.common.config.member.entity.MemberRole
-import com.project1.hatin.common.config.member.repository.MemberRepository
-import com.project1.hatin.common.config.member.repository.MemberRoleRepository
+import com.project1.hatin.member.dto.LoginDto
+import com.project1.hatin.member.dto.MemberRequestDto
+import com.project1.hatin.member.entity.Member
+import com.project1.hatin.member.entity.MemberRole
+import com.project1.hatin.member.repository.MemberRepository
+import com.project1.hatin.member.repository.MemberRoleRepository
 import com.project1.hatin.routine.dto.RoutineRequestDTO.CreateRequestDTO
 import com.project1.hatin.routine.dto.RoutineResponseDTO.CreateResponseDTO
 import com.project1.hatin.routine.entity.Routine
@@ -19,6 +19,7 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.transaction.Transactional
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 @Tag(name = "회원 Api 컨트롤러", description = "회원 가입, 로그인, Api 명세서 입니다.")
 @Transactional
@@ -29,8 +30,8 @@ class MemberService (
     private val routineService: RoutineService,
     private val memberRoleRepository: MemberRoleRepository,
     private val jwtTokenProvider: JwtTokenProvider,
-    private val authenticationManagerBuilder: AuthenticationManagerBuilder
-//    private val passwordEncoder: PasswordEncoder
+    private val authenticationManagerBuilder: AuthenticationManagerBuilder,
+    private val passwordEncoder: PasswordEncoder
 ){
     fun signUp(memberRequestDto : MemberRequestDto) : String {
         var member: Member? = memberRepository.findByuserId(memberRequestDto.userId)
@@ -38,7 +39,7 @@ class MemberService (
             throw InvaliduserIdException(fieldName = "userId", massage = "이미 가입한 사용자 아이디입니다!")
         }
         //비밀번호 encode
-//        memberRequestDto.encodePW(passwordEncoder)
+        memberRequestDto.encodePW(passwordEncoder)
         member = memberRequestDto.toEntity()
         memberRepository.save(member)
 

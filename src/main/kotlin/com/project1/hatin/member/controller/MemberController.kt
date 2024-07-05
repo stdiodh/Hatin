@@ -1,11 +1,11 @@
-package com.project1.hatin.common.config.member.controller
+package com.project1.hatin.member.controller
 
 import com.project1.hatin.common.dto.BaseResponse
 import com.project1.hatin.common.dto.TokenInfo
-import com.project1.hatin.common.config.member.dto.LoginDto
-import com.project1.hatin.common.config.member.dto.MemberDto.SignUpRoutineRequest
-import com.project1.hatin.common.config.member.dto.MemberRequestDto
-import com.project1.hatin.common.config.member.service.MemberService
+import com.project1.hatin.member.dto.LoginDto
+import com.project1.hatin.member.dto.MemberDto.SignUpRoutineRequest
+import com.project1.hatin.member.dto.MemberRequestDto
+import com.project1.hatin.member.service.MemberService
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid

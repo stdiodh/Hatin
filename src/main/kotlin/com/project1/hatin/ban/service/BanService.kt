@@ -8,7 +8,7 @@ import com.project1.hatin.ban.dto.BanKeywordResponseDTO.CreateKeywordResponseDTO
 import com.project1.hatin.ban.dto.BanKeywordResponseDTO.ShowKeywordResponseDTO
 import com.project1.hatin.ban.dto.BanKeywordResponseDTO.PatchKeywordResponseDTO
 import com.project1.hatin.ban.entity.BanKeyword
-import com.project1.hatin.common.config.member.repository.MemberRepository
+import com.project1.hatin.member.repository.MemberRepository
 import com.project1.hatin.common.dto.CustomUser
 import com.project1.hatin.common.exception.PostException
 import jakarta.transaction.Transactional

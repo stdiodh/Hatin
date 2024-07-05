@@ -1,9 +1,9 @@
-package com.project1.hatin.common.config.member.dto
+package com.project1.hatin.member.dto
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.project1.hatin.common.annotation.ValidEnum
 import com.project1.hatin.common.enums.Gender
-import com.project1.hatin.common.config.member.entity.Member
+import com.project1.hatin.member.entity.Member
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Pattern
@@ -63,19 +63,19 @@ data class MemberRequestDto (
     val gender : Gender
         get() = Gender.valueOf(_gender!!)
 
-    //비밀번호 encode
-//    lateinit var encodePW: String
-//
-//    fun encodePW(passwordEncoder: PasswordEncoder) {
-//        encodePW = passwordEncoder.encode(password)
-//    }
+//    비밀번호 encode
+    lateinit var encodePW: String
+
+    fun encodePW(passwordEncoder: PasswordEncoder) {
+        encodePW = passwordEncoder.encode(password)
+    }
 
     private fun String.toLocalDate() : LocalDate =
         LocalDate.parse(this, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
 
     fun toEntity() : Member = Member (
         userId = userId,
-        password = password,
+        password = encodePW,
         nickName = nickName,
         birthday = birthday,
         phoneNumber = phoneNumber,
