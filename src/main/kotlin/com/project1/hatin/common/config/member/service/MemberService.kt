@@ -30,13 +30,15 @@ class MemberService (
     private val memberRoleRepository: MemberRoleRepository,
     private val jwtTokenProvider: JwtTokenProvider,
     private val authenticationManagerBuilder: AuthenticationManagerBuilder
+//    private val passwordEncoder: PasswordEncoder
 ){
     fun signUp(memberRequestDto : MemberRequestDto) : String {
         var member: Member? = memberRepository.findByuserId(memberRequestDto.userId)
         if (member != null){
             throw InvaliduserIdException(fieldName = "userId", massage = "이미 가입한 사용자 아이디입니다!")
         }
-
+        //비밀번호 encode
+//        memberRequestDto.encodePW(passwordEncoder)
         member = memberRequestDto.toEntity()
         memberRepository.save(member)
 
