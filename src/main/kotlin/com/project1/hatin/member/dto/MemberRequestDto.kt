@@ -66,7 +66,6 @@ data class MemberRequestDto (
         get() = Gender.valueOf(_gender!!)
 
 
-
     fun encodePW(passwordEncoder: PasswordEncoder) {
         encodePW = passwordEncoder.encode(password)
     }
@@ -74,14 +73,4 @@ data class MemberRequestDto (
     private fun String.toLocalDate() : LocalDate =
         LocalDate.parse(this, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
 
-    fun toEntity() : Member = Member (
-
-        userId = userId,
-        password = encodePW,
-        nickName = nickName,
-        birthday = birthday,
-        phoneNumber = phoneNumber,
-        address = address,
-        gender = gender
-    )
 }
