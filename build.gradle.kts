@@ -31,6 +31,8 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation ("org.springframework.boot:spring-boot-devtools")
 
+	// yml 파일 암호화
+	implementation("com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5")
 	// swager
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
 	// validation
