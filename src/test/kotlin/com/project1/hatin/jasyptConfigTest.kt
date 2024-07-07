@@ -14,9 +14,17 @@ class JasyptConfigTest {
         val encryptUsername = jasyptEncrypt(username)
         val encryptPassword = jasyptEncrypt(password)
 
+        val decryptUrl = jasyptDecrypt(encryptUrl)
+        val decryptUsername = jasyptDecrypt(encryptUsername)
+        val decryptPassword = jasyptDecrypt(encryptPassword)
+
         println("encryptUrl : $encryptUrl")
         println("encryptUsername : $encryptUsername")
         println("encryptPassword : $encryptPassword")
+
+        println("decryptUrl : $decryptUrl")
+        println("decryptUsername : $decryptUsername")
+        println("decryptPassword : $decryptPassword")
 
         assertThat(url).isEqualTo(jasyptDecrypt(encryptUrl))
     }

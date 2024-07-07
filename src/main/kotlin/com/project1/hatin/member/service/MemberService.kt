@@ -1,7 +1,6 @@
 package com.project1.hatin.member.service
 
 import com.project1.hatin.common.authority.JwtTokenProvider
-import com.project1.hatin.common.dto.CustomUser
 import com.project1.hatin.common.dto.TokenInfo
 import com.project1.hatin.common.enums.Role
 import com.project1.hatin.common.exception.PostException

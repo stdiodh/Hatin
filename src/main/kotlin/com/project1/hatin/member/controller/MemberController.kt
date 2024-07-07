@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController
 class MemberController (
     private val memberService: MemberService
 ){
-    //회원가입 - 루틴 저장 api
+    @Operation(summary = "사용자 정보 회원가입", description = "사용자 회원가입 API 입니다.")
     @PostMapping("/join")
     private fun signUpRoutine(@Parameter(description = "사용자가 회원가입 정보 데이터") @Valid @RequestBody signUpRoutineRequest: SignUpRoutineRequest
     )
@@ -39,7 +39,7 @@ class MemberController (
             .body(BaseResponse(data = result))
     }
 
-    //로그인 api
+    @Operation(summary = "사용자 로그인", description = "사용자 로그인 API 입니다.")
     @PostMapping("/login")
     private fun login(@Valid @RequestBody loginDto: LoginDto)
     : ResponseEntity<BaseResponse<TokenInfo>>{
@@ -57,4 +57,5 @@ class MemberController (
         val result = memberService.searchMyInfo(id)
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponse(data = result))
     }
+
 }
