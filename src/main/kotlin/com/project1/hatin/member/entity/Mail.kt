@@ -5,13 +5,13 @@ import jakarta.persistence.*
 import java.time.LocalDateTime
 
 @Entity
-data class PasswordResetToken(
+data class PasswordResetCode(
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     val id : Long = 0,
 
     @Column(nullable = false)
-    val token: String,
+    val code: String,
 
     @Column(nullable = false)
     val userId: String,

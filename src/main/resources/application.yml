@@ -40,6 +40,7 @@ spring:
             enable: true
 
 
+
 jwt:
   secret: ThisistestThisistestThisistestThisistestThisistest
 

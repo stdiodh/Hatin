@@ -6,8 +6,6 @@ import com.project1.hatin.common.dto.TokenInfo
 import com.project1.hatin.member.dto.LoginDto
 import com.project1.hatin.member.dto.MemberDto.SignUpRoutineRequest
 import com.project1.hatin.member.dto.MemberResponseDto
-import com.project1.hatin.member.entity.Member
-import com.project1.hatin.member.repository.PasswordResetTokenRepository
 import com.project1.hatin.member.service.MemberService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
@@ -24,13 +22,11 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import java.time.LocalDateTime
 
 @Tag(name = "회원 Api 컨트롤러", description = "회원생성, 로그인, 전체 조회 Api 명세서입니다.")
 @RestController
 @RequestMapping("/api/member")
 class MemberController (
-    private val tokenRepository: PasswordResetTokenRepository,
     private val memberService: MemberService
 ){
     @Operation(summary = "사용자 정보 회원가입", description = "사용자 회원가입 API 입니다.")
@@ -62,43 +58,45 @@ class MemberController (
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponse(data = result))
     }
 
+    @Operation(summary = "사용자 비밀번호 변경 요청", description = "사용자 비밀번호에 대한 코드를 만드는 API 입니다.")
     @PostMapping("/request-password-reset")
-    fun requestPasswordReset(@RequestParam userId: String, model: Model): String {
-        memberService.sendPasswordResetUserId(userId)
-        model.addAttribute("message", "비밀번호 변경을 요청합니다!")
-        return "비밀번호 변경 요청"
-    }
-
-    @Operation(summary = "사용자 비밀번호 초기화", description = "사용자 비밀번호 초기화 API 입니다.")
-    @GetMapping("/reset-password")
-    fun showResetPasswordPage(@RequestBody token: String, model: Model): String{
-        val passwordResetToken = tokenRepository.findByToken(token)
-
-        if (passwordResetToken == null || passwordResetToken.expiryData.isBefore(LocalDateTime.now())){
-            model.addAttribute("에러 발생!, 유효하지 않거나 만료된 토큰입니다!")
-            return "error"
+    fun requestPasswordReset(@Parameter(required = true,description = "사용자 이메일") @RequestParam userId: String, model: Model): ResponseEntity<BaseResponse<Model>> {
+        val user = memberService.findByUserId(userId)
+        if (user == null) {
+            val result = model.addAttribute("오류 발생", "이메일이 정확하지 않습니다!")
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(BaseResponse(data = result))
         }
 
-        model.addAttribute("token", token)
-        return "비밀번호 변경"
+        memberService.sendPasswordResetCode(userId)
+        val result = model.addAttribute("인증 확인", "비밀번호 인증코드를 보냈습니다!")
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponse(data = result))
     }
 
-    @Operation(summary = "사용자 비밀번호 초기화", description = "사용자 비밀번호 초기화 API 입니다.")
+    @Operation(summary = "사용자 비밀번호 변경", description = "사용자 비밀번호 초기화 API 입니다.")
     @PostMapping("/reset-password")
-    fun handlePasswordReset(@RequestParam token: String, @RequestParam newPassword : String, model: Model): String {
-        val passwordResetToken = tokenRepository.findByToken(token)
-
-        if (passwordResetToken == null || passwordResetToken.expiryData.isBefore(LocalDateTime.now())){
-            model.addAttribute("에러 발생!", "유효하지 않거나 말료된 토큰입니다.")
-            return "에러"
+    fun handlePasswordReset(
+        @Parameter(required = true,description = "루틴 이메일")
+        @RequestParam userId: String,
+        @Parameter(required = true,description = "인증 코드")
+        @RequestParam code: String,
+        @Parameter(required = true,description = "새로운 비밀번호")
+        @RequestParam newPassword: String,
+        model: Model
+    ): ResponseEntity<BaseResponse<Model>>  {
+        if (!memberService.validateResetCode(userId, code)) {
+            val result = model.addAttribute("오류 발생", "인증코드가 정확하지 않습니다!")
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(BaseResponse(data = result))
         }
 
-        val user = memberService.findByUserId(passwordResetToken.userId)
+        val user = memberService.findByUserId(userId)
         user!!.password = newPassword
         memberService.passwordSave(user)
 
-        tokenRepository.delete(passwordResetToken)
+        val result = model.addAttribute("변경 완료", "비밀번호가 변경되었습니다.")
 
-        return "redirect:/login?resetSuccess"
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(BaseResponse(data = result))
     }
 }

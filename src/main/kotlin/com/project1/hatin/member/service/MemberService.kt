@@ -10,10 +10,10 @@ import com.project1.hatin.member.dto.MemberRequestDto
 import com.project1.hatin.member.dto.MemberResponseDto
 import com.project1.hatin.member.entity.Member
 import com.project1.hatin.member.entity.MemberRole
-import com.project1.hatin.member.entity.PasswordResetToken
+import com.project1.hatin.member.entity.PasswordResetCode
 import com.project1.hatin.member.repository.MemberRepository
 import com.project1.hatin.member.repository.MemberRoleRepository
-import com.project1.hatin.member.repository.PasswordResetTokenRepository
+import com.project1.hatin.member.repository.PasswordResetCodeRepository
 import com.project1.hatin.routine.dto.RoutineRequestDTO.CreateRequestDTO
 import com.project1.hatin.routine.service.RoutineService
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -26,7 +26,6 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
-import java.util.UUID
 
 @Tag(name = "회원 Api 컨트롤러", description = "회원 가입, 로그인, Api 명세서 입니다.")
 @Transactional
@@ -39,7 +38,7 @@ class MemberService (
     private val authenticationManagerBuilder: AuthenticationManagerBuilder,
     private val passwordEncoder: PasswordEncoder,
     private val mailSender: JavaMailSender,
-    private val tokenRepository: PasswordResetTokenRepository
+    private val codeRepository: PasswordResetCodeRepository
 
 ){
     fun signUp(memberRequestDto : MemberRequestDto, createRequestDTOList: List<CreateRequestDTO>) : String {
@@ -97,22 +96,33 @@ class MemberService (
         memberRepository.save(member)
     }
 
-    fun sendPasswordResetUserId(userId: String){
-        val token = UUID.randomUUID().toString()
-        val expiryDate = LocalDateTime.now().plusHours(1)
+    fun sendPasswordResetCode(userId: String){
+        val code = (100000..999999).random().toString()
+        val expiryDate = LocalDateTime.now().plusMinutes(15)
 
-        val passwordResetToken = PasswordResetToken(
-            token = token,
+        val passwordResetCode = PasswordResetCode(
+            code = code,
             userId = userId,
             expiryData = expiryDate
         )
-        tokenRepository.save(passwordResetToken)
+        codeRepository.save(passwordResetCode)
 
         val message = SimpleMailMessage()
         message.setTo(userId)
         message.subject = "비밀번호 변경 요청"
-        message.text = "당신의 비밀번호를 변경했으니, 아래의 링크를 확인해주새요!:\n" +
-                "http://localhost:8080/reset-password?token=$token"
-        mailSender.send(message)
+        message.text = "당신의 비밀번호 인증코드는 : $code 입니다! \n" +
+                "15분 안에 회신하셔야 비밀번호를 바꿀 수 있습니다!"
+        try {
+            mailSender.send(message)
+            println("비밀번호 인증코드를 정상적으로 보냈습니다!")
+        } catch (e: Exception) {
+            e.printStackTrace()
+            println("비밀번호 초기화 인증코드를 보내지 못했습니다.")
+        }
+    }
+
+    fun validateResetCode(userId: String, code: String): Boolean {
+        val passwordResetCode = codeRepository.findByCodeAndUserId(code, userId)
+        return passwordResetCode != null && passwordResetCode.expiryData.isAfter(LocalDateTime.now())
     }
 }
