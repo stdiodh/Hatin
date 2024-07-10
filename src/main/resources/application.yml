@@ -9,7 +9,7 @@ spring:
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/hatin?autoReconnect=true&useUnicode=true&serverTimezone=Asia/Seoul
+    url: jdbc:mysql://mysql-container:3306/hatin_db?autoReconnect=true&useUnicode=true&serverTimezone=Asia/Seoul
     username: project1
     password: 1234
 #    url: jdbc:mysql://hatin.c9yauws0udbd.ap-northeast-2.rds.amazonaws.com:3306/hatin?autoReconnect=true&useUnicode=true&serverTimezone=Asia/Seoul
