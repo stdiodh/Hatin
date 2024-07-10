@@ -13,21 +13,15 @@ import com.project1.hatin.member.entity.MemberRole
 import com.project1.hatin.member.entity.PasswordResetCode
 import com.project1.hatin.member.repository.MemberRepository
 import com.project1.hatin.member.repository.MemberRoleRepository
-<<<<<<< HEAD
+
 import com.project1.hatin.routine.dto.RoutineRequestDTO.RoutineCreateRequestDTO
 import com.project1.hatin.routine.service.RoutineService
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.transaction.Transactional
-=======
 import com.project1.hatin.member.repository.PasswordResetCodeRepository
-import com.project1.hatin.routine.dto.RoutineRequestDTO.CreateRequestDTO
-import com.project1.hatin.routine.service.RoutineService
-import io.swagger.v3.oas.annotations.tags.Tag
-import jakarta.transaction.Transactional
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.mail.SimpleMailMessage
 import org.springframework.mail.javamail.JavaMailSender
->>>>>>> ad973bd27dde7ad35248e94be9daf776ddbea8b0
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.crypto.password.PasswordEncoder

@@ -4,11 +4,8 @@ package com.project1.hatin.member.entity
 import com.project1.hatin.ban.entity.BanKeyword
 import com.project1.hatin.common.entity.BaseEntity
 import com.project1.hatin.common.enums.Gender
-<<<<<<< HEAD
 import com.project1.hatin.feed.entity.FeedEntity
-=======
 import com.project1.hatin.member.dto.MemberResponseDto
->>>>>>> ad973bd27dde7ad35248e94be9daf776ddbea8b0
 import com.project1.hatin.routine.entity.Routine
 import jakarta.persistence.*
 import java.time.LocalDate
@@ -57,12 +54,10 @@ class Member (
     @JoinColumn(name = "member_id")
     var banKeywordList: MutableList<BanKeyword> = mutableListOf(),
 
-<<<<<<< HEAD
+
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true, mappedBy = "member")
     var feedEntityList: MutableList<FeedEntity>? = mutableListOf(),
 
-    ) : BaseEntity()
-=======
     ) : BaseEntity() {
         fun toResponse() : MemberResponseDto = MemberResponseDto(
             userId = userId,
@@ -74,4 +69,4 @@ class Member (
             gender = gender
         )
     }
->>>>>>> ad973bd27dde7ad35248e94be9daf776ddbea8b0
+
