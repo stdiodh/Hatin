@@ -48,8 +48,6 @@ data class MemberRequestDto (
     @JsonProperty("gender")
     private val _gender : String?,
 ){
-    // 비밀번호 encode
-    private lateinit var encodePW: String
     val userId : String
         get() = _userId!!
     val password : String
@@ -65,23 +63,6 @@ data class MemberRequestDto (
     val gender : Gender
         get() = Gender.valueOf(_gender!!)
 
-
-
-    fun encodePW(passwordEncoder: PasswordEncoder) {
-        encodePW = passwordEncoder.encode(password)
-    }
-
     private fun String.toLocalDate() : LocalDate =
         LocalDate.parse(this, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-
-    fun toEntity() : Member = Member (
-
-        userId = userId,
-        password = encodePW,
-        nickName = nickName,
-        birthday = birthday,
-        phoneNumber = phoneNumber,
-        address = address,
-        gender = gender
-    )
 }

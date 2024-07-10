@@ -1,3 +1,8 @@
+jasypt:
+  encryptor:
+    bean : jasyptStringEncryptor
+    password: 5678
+
 spring:
   application:
     name: hatin
@@ -21,8 +26,24 @@ spring:
     resources:
       add-mappings: false
 
+  mail:
+    default-encoding: UTF-8
+    host: smtp.gmail.com
+    port: 587
+    username:
+    password:
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+
+
 jwt:
   secret: ThisistestThisistestThisistestThisistestThisistest
+
 #logging:
 #  level:
 #    root: DEBUG
