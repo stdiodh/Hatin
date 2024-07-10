@@ -1,8 +1,3 @@
-jasypt:
-  encryptor:
-    bean : jasyptStringEncryptor
-    password: 5678
-
 spring:
   application:
     name: hatin
@@ -12,9 +7,6 @@ spring:
     url: jdbc:mysql://mysql-container:3306/hatin_db?autoReconnect=true&useUnicode=true&serverTimezone=Asia/Seoul
     username: project1
     password: 1234
-#    url: jdbc:mysql://hatin.c9yauws0udbd.ap-northeast-2.rds.amazonaws.com:3306/hatin?autoReconnect=true&useUnicode=true&serverTimezone=Asia/Seoul
-#    username: admin
-#    password: hatin123
 
   jpa:
     hibernate:
@@ -38,8 +30,6 @@ spring:
           auth: true
           starttls:
             enable: true
-
-
 
 jwt:
   secret: ThisistestThisistestThisistestThisistestThisistest
