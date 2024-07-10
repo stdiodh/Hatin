@@ -76,7 +76,7 @@ class MemberController (
     @Operation(summary = "사용자 비밀번호 변경", description = "사용자 비밀번호 초기화 API 입니다.")
     @PostMapping("/reset-password")
     fun handlePasswordReset(
-        @Parameter(required = true,description = "루틴 이메일")
+        @Parameter(required = true,description = "유저 이메일")
         @RequestParam userId: String,
         @Parameter(required = true,description = "인증 코드")
         @RequestParam code: String,
