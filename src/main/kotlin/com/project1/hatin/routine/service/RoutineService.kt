@@ -119,7 +119,7 @@ class RoutineService(
     }
 
     fun deleteRoutine(id: Long){
-        var target : Routine = routineRepository.findByIdOrNull(id)
+        routineRepository.findByIdOrNull(id)
             ?: throw PostException(msg = "존재하지 않는 루틴 ID 입니다.")
 
         routineRepository.deleteById(id)

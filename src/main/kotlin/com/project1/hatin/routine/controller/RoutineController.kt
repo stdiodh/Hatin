@@ -21,7 +21,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 
 
-@Tag(name = "루틴 Api 컨트롤러", description = "루틴생성, 조회, 수정, 삭제 Api 명세서입니다.")
+@Tag(name = "루틴 Api 컨트롤러", description = "루틴 생성, 조회, 수정, 삭제 Api 명세서입니다.")
 @RestController
 @RequestMapping("/api/routine")
 class RoutineController(
