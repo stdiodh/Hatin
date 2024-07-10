@@ -73,9 +73,10 @@ class FeedController(
     @Operation(summary = "게시글 삭제", description = "게시글 삭제 API 입니다.")
     @SecurityRequirement(name = "bearerAuth")
     @DeleteMapping("{id}")
-    private fun deleteFeed(@Parameter(required = true,description = "게시글 ID") @PathVariable(name = "id") id : Long)
+    private fun deleteFeed(@Parameter(required = true,description = "게시글 ID") @PathVariable(name = "id") id : Long,
+                           @Parameter(description = "헤더에 담긴 유저정보") @AuthenticationPrincipal userInfo: CustomUser,)
             : ResponseEntity<BaseResponse<Any>> {
-        val result = feedService.deleteFeed(id)
+        val result = feedService.deleteFeed(id,userInfo)
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponse(data = "게시글이 삭제되었습니다."))
     }
 

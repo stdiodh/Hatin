@@ -99,8 +99,13 @@ class FeedService(
     }
 
     fun patchFeed(id: Long, feedPatchRequestDTO: FeedPatchRequestDTO, userInfo: CustomUser):FeedPatchResponseDTO {
-        var target : FeedEntity = feedRepository.findByIdOrNull(id)
-            ?: throw PostException(msg = "존재하지 않는 게시글 ID 입니다.")
+        val targetUser = memberRepository.findByIdOrNull(userInfo.id)
+            ?: throw PostException(msg = "존재하지 않는 사용자 입니다.")
+
+        var target = targetUser.feedEntityList?.find { it.id == id }
+
+        if (target == null) throw PostException(msg = "사용자가 작성한 게시글 ID가 아닙니다.")
+
 
         target.title = feedPatchRequestDTO.title
         target.content = feedPatchRequestDTO.content
@@ -123,9 +128,14 @@ class FeedService(
         )
     }
 
-    fun deleteFeed(id: Long){
-        feedRepository.findByIdOrNull(id)
-            ?: throw PostException(msg = "존재하지 않는 루틴 ID 입니다.")
+    fun deleteFeed(id: Long, userInfo: CustomUser){
+        val targetUser = memberRepository.findByIdOrNull(userInfo.id)
+            ?: throw PostException(msg = "존재하지 않는 사용자 입니다.")
+
+        val foundFeed = targetUser.feedEntityList?.find { it.id == id }
+
+        if (foundFeed == null) throw PostException(msg = "사용자가 작성한 게시글 ID가 아닙니다.")
+
         feedRepository.deleteById(id)
     }
 }
