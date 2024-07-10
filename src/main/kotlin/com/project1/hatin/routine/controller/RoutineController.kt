@@ -3,6 +3,7 @@ package com.project1.hatin.routine.controller
 import com.project1.hatin.common.dto.BaseResponse
 import com.project1.hatin.common.dto.CustomUser
 import com.project1.hatin.routine.dto.RoutineRequestDTO.CreateRequestDTO
+import com.project1.hatin.routine.dto.RoutineRequestDTO.DeleteRequestDTO
 import com.project1.hatin.routine.dto.RoutineRequestDTO.PatchRequestDTO
 import com.project1.hatin.routine.dto.RoutineResponseDTO.CreateResponseDTO
 import com.project1.hatin.routine.dto.RoutineResponseDTO.PatchResponseDTO
@@ -61,4 +62,13 @@ class RoutineController(
         routineService.deleteRoutine(id)
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponse(data = "루틴이 삭제되었습니다."))
     }
+
+    @Operation(summary = "사용자 루틴 목록 삭제", description = "사용자 루틴 목록 삭제 API 입니다.")
+    @DeleteMapping
+    private fun deleteRoutineList(@Parameter(description = "사용자가 삭제하는 루틴 목록 데이터") @RequestBody deleteRequestDTOList: List<DeleteRequestDTO>)
+            : ResponseEntity<BaseResponse<String>> {
+        routineService.deleteRoutineList(deleteRequestDTOList)
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponse(data = "루틴 목록이 삭제되었습니다."))
+    }
+
 }

@@ -49,4 +49,8 @@ class RoutineRequestDTO {
 
         val isFinish: Boolean,
     )
+
+    data class DeleteRequestDTO(
+        val id: Long
+    )
 }

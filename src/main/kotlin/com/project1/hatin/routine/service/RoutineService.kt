@@ -4,6 +4,7 @@ import com.project1.hatin.common.dto.CustomUser
 import com.project1.hatin.common.exception.PostException
 import com.project1.hatin.member.repository.MemberRepository
 import com.project1.hatin.routine.dto.RoutineRequestDTO.PatchRequestDTO
+import com.project1.hatin.routine.dto.RoutineRequestDTO.DeleteRequestDTO
 import com.project1.hatin.routine.dto.RoutineRequestDTO.CreateRequestDTO
 import com.project1.hatin.routine.dto.RoutineResponseDTO.PatchResponseDTO
 import com.project1.hatin.routine.dto.RoutineResponseDTO.ShowResponseDTO
@@ -95,7 +96,7 @@ class RoutineService(
     fun patchRoutine(id: Long,patchRequestDTO: PatchRequestDTO): PatchResponseDTO {
 
         var target : Routine = routineRepository.findByIdOrNull(id)
-            ?: throw PostException(msg = "존재하지 않는 루틴 ID입니다.")
+            ?: throw PostException(msg = "존재하지 않는 루틴 ID 입니다.")
 
         target.name = patchRequestDTO.name
         target.startAt = patchRequestDTO.startAt
@@ -119,9 +120,20 @@ class RoutineService(
 
     fun deleteRoutine(id: Long){
         var target : Routine = routineRepository.findByIdOrNull(id)
-            ?: throw PostException(msg = "존재하지 않는 루틴 ID입니다.")
+            ?: throw PostException(msg = "존재하지 않는 루틴 ID 입니다.")
 
         routineRepository.deleteById(id)
     }
 
+    fun deleteRoutineList(deleteRequestDTOList: List<DeleteRequestDTO>) {
+
+        val deleteRoutineList = mutableListOf<Routine?>()
+
+        for (dto in deleteRequestDTOList) {
+            val target = routineRepository.findByIdOrNull(dto.id)
+                ?: throw PostException(msg = "존재하지 않는 루틴 ID 입니다.")
+            deleteRoutineList.add(target)
+        }
+        routineRepository.deleteAll(deleteRoutineList)
+    }
 }
