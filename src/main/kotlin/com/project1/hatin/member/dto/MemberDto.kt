@@ -1,6 +1,6 @@
 package com.project1.hatin.member.dto
 
-import com.project1.hatin.routine.dto.RoutineRequestDTO.CreateRequestDTO
+import com.project1.hatin.routine.dto.RoutineRequestDTO.RoutineCreateRequestDTO
 import jakarta.validation.Valid
 
 class MemberDto {
@@ -8,6 +8,6 @@ class MemberDto {
         @field:Valid
         val memberRequestDto: MemberRequestDto,
         @field:Valid
-        val createRequestDTOList: List<CreateRequestDTO>
+        val routineCreateRequestDTOList: List<RoutineCreateRequestDTO>
     )
 }

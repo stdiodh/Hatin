@@ -5,7 +5,10 @@ import com.project1.hatin.common.dto.CustomUser
 import com.project1.hatin.common.dto.TokenInfo
 import com.project1.hatin.member.dto.LoginDto
 import com.project1.hatin.member.dto.MemberDto.SignUpRoutineRequest
+<<<<<<< HEAD
+=======
 import com.project1.hatin.member.dto.MemberResponseDto
+>>>>>>> ad973bd27dde7ad35248e94be9daf776ddbea8b0
 import com.project1.hatin.member.service.MemberService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
@@ -34,7 +37,7 @@ class MemberController (
     private fun signUpRoutine(@Parameter(description = "사용자가 회원가입 정보 데이터") @Valid @RequestBody signUpRoutineRequest: SignUpRoutineRequest
     )
             : ResponseEntity<BaseResponse<String>>{
-        val result = memberService.signUp(signUpRoutineRequest.memberRequestDto,signUpRoutineRequest.createRequestDTOList)
+        val result = memberService.signUp(signUpRoutineRequest.memberRequestDto,signUpRoutineRequest.routineCreateRequestDTOList)
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(BaseResponse(data = result))
     }

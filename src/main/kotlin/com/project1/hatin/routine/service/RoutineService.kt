@@ -3,11 +3,12 @@ package com.project1.hatin.routine.service
 import com.project1.hatin.common.dto.CustomUser
 import com.project1.hatin.common.exception.PostException
 import com.project1.hatin.member.repository.MemberRepository
-import com.project1.hatin.routine.dto.RoutineRequestDTO.PatchRequestDTO
-import com.project1.hatin.routine.dto.RoutineRequestDTO.CreateRequestDTO
-import com.project1.hatin.routine.dto.RoutineResponseDTO.PatchResponseDTO
-import com.project1.hatin.routine.dto.RoutineResponseDTO.ShowResponseDTO
-import com.project1.hatin.routine.dto.RoutineResponseDTO.CreateResponseDTO
+import com.project1.hatin.routine.dto.RoutineRequestDTO.RoutinePatchRequestDTO
+import com.project1.hatin.routine.dto.RoutineRequestDTO.RoutineDeleteRequestDTO
+import com.project1.hatin.routine.dto.RoutineRequestDTO.RoutineCreateRequestDTO
+import com.project1.hatin.routine.dto.RoutineResponseDTO.RoutinePatchResponseDTO
+import com.project1.hatin.routine.dto.RoutineResponseDTO.RoutineShowResponseDTO
+import com.project1.hatin.routine.dto.RoutineResponseDTO.RoutineCreateResponseDTO
 import com.project1.hatin.routine.entity.Routine
 import com.project1.hatin.routine.repository.RoutineRepository
 import jakarta.transaction.Transactional
@@ -20,16 +21,16 @@ class RoutineService(
     private val routineRepository: RoutineRepository,
     private val memberRepository: MemberRepository
 ){
-    fun showRoutineList(userInfo : CustomUser): List<ShowResponseDTO> {
+    fun showRoutineList(userInfo : CustomUser): List<RoutineShowResponseDTO> {
         val targetUser = memberRepository.findByIdOrNull(userInfo.id)
             ?: throw PostException(msg = "존재하지 않는 사용자입니다.")
 
         val targetRoutine = targetUser.routineList
 
-        val result = mutableListOf<ShowResponseDTO>()
+        val result = mutableListOf<RoutineShowResponseDTO>()
 
         for (routine in targetRoutine) {
-            val dto = ShowResponseDTO(
+            val dto = RoutineShowResponseDTO(
                 id = routine.id!!,
                 startAt = routine.startAt,
                 finishAt = routine.finishAt,
@@ -43,16 +44,16 @@ class RoutineService(
         return result
     }
 
-    fun createRoutine(createRequestDTO: CreateRequestDTO, userInfo: CustomUser): CreateResponseDTO {
+    fun createRoutine(routineCreateRequestDTO: RoutineCreateRequestDTO, userInfo: CustomUser): RoutineCreateResponseDTO {
         val targetUser = memberRepository.findByIdOrNull(userInfo.id)
             ?: throw PostException(msg = "존재하지 않는 사용자입니다.")
 
         val routine = Routine(
-            startAt = createRequestDTO.startAt,
-            finishAt = createRequestDTO.finishAt,
-            name = createRequestDTO.name,
-            weekDay = createRequestDTO.weekDay,
-            memo = createRequestDTO.memo,
+            startAt = routineCreateRequestDTO.startAt,
+            finishAt = routineCreateRequestDTO.finishAt,
+            name = routineCreateRequestDTO.name,
+            weekDay = routineCreateRequestDTO.weekDay,
+            memo = routineCreateRequestDTO.memo,
             isFinish = false
         )
 
@@ -61,7 +62,7 @@ class RoutineService(
         targetUser.routineList.add(result)
         memberRepository.save(targetUser)
 
-        return CreateResponseDTO(
+        return RoutineCreateResponseDTO(
             id =  result.id,
             startAt =  result.startAt,
             finishAt =  result.finishAt,
@@ -72,11 +73,11 @@ class RoutineService(
             )
     }
 
-    fun createRoutineList(createRequestDTOList: List<CreateRequestDTO>): MutableList<Routine> {
+    fun createRoutineList(routineCreateRequestDTOList: List<RoutineCreateRequestDTO>): MutableList<Routine> {
 
         var createRoutineList = mutableListOf<Routine>()
 
-        for (dto in createRequestDTOList) {
+        for (dto in routineCreateRequestDTOList) {
             val routine = Routine(
                 startAt = dto.startAt,
                 finishAt = dto.finishAt,
@@ -92,21 +93,21 @@ class RoutineService(
         return createRoutineList
     }
 
-    fun patchRoutine(id: Long,patchRequestDTO: PatchRequestDTO): PatchResponseDTO {
+    fun patchRoutine(id: Long, routinePatchRequestDTO: RoutinePatchRequestDTO): RoutinePatchResponseDTO {
 
         var target : Routine = routineRepository.findByIdOrNull(id)
-            ?: throw PostException(msg = "존재하지 않는 루틴 ID입니다.")
+            ?: throw PostException(msg = "존재하지 않는 루틴 ID 입니다.")
 
-        target.name = patchRequestDTO.name
-        target.startAt = patchRequestDTO.startAt
-        target.finishAt = patchRequestDTO.finishAt
-        target.weekDay = patchRequestDTO.weekDay
-        target.memo = patchRequestDTO.memo
-        target.isFinish = patchRequestDTO.isFinish
+        target.name = routinePatchRequestDTO.name
+        target.startAt = routinePatchRequestDTO.startAt
+        target.finishAt = routinePatchRequestDTO.finishAt
+        target.weekDay = routinePatchRequestDTO.weekDay
+        target.memo = routinePatchRequestDTO.memo
+        target.isFinish = routinePatchRequestDTO.isFinish
 
         target = routineRepository.save(target)
 
-        return PatchResponseDTO(
+        return RoutinePatchResponseDTO(
             id =  target.id,
             startAt =  target.startAt,
             finishAt =  target.finishAt,
@@ -118,10 +119,21 @@ class RoutineService(
     }
 
     fun deleteRoutine(id: Long){
-        var target : Routine = routineRepository.findByIdOrNull(id)
-            ?: throw PostException(msg = "존재하지 않는 루틴 ID입니다.")
+        routineRepository.findByIdOrNull(id)
+            ?: throw PostException(msg = "존재하지 않는 루틴 ID 입니다.")
 
         routineRepository.deleteById(id)
     }
 
+    fun deleteRoutineList(routineDeleteRequestDTOList: List<RoutineDeleteRequestDTO>) {
+
+        val deleteRoutineList = mutableListOf<Routine?>()
+
+        for (dto in routineDeleteRequestDTOList) {
+            val target = routineRepository.findByIdOrNull(dto.id)
+                ?: throw PostException(msg = "존재하지 않는 루틴 ID 입니다.")
+            deleteRoutineList.add(target)
+        }
+        routineRepository.deleteAll(deleteRoutineList)
+    }
 }
