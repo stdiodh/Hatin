@@ -1,10 +1,9 @@
 package com.project1.hatin.routine.dto
 
-import com.fasterxml.jackson.annotation.JsonProperty
-import com.project1.hatin.routine.enums.DayOfWeek
+import com.project1.hatin.common.enums.DayOfWeek
 
 class RoutineResponseDTO {
-    data class CreateResponseDTO(
+    data class RoutineCreateResponseDTO(
         var id: Long?,
 
         var startAt: String,
@@ -20,7 +19,7 @@ class RoutineResponseDTO {
         var isFinish: Boolean,
     )
 
-    data class PatchResponseDTO(
+    data class RoutinePatchResponseDTO(
         var id: Long?,
 
         var startAt: String,
@@ -36,7 +35,7 @@ class RoutineResponseDTO {
         var isFinish: Boolean,
     )
 
-    data class ShowResponseDTO(
+    data class RoutineShowResponseDTO(
         var id: Long?,
 
         var startAt: String,

@@ -1,12 +1,12 @@
 package com.project1.hatin.routine.dto
 
 import com.project1.hatin.common.annotation.ValidEnum
-import com.project1.hatin.routine.enums.DayOfWeek
+import com.project1.hatin.common.enums.DayOfWeek
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Pattern
 
 class RoutineRequestDTO {
-    data class CreateRequestDTO(
+    data class RoutineCreateRequestDTO(
         @field:NotBlank(message = "시작 시간을 선택하세요!")
         @field:Pattern(
             regexp = "^(?:[01][0-9]|2[0-3]):(?:00|10|20|30|40|50)\$",
@@ -27,7 +27,7 @@ class RoutineRequestDTO {
         val memo: String,
     )
 
-    data class PatchRequestDTO(
+    data class RoutinePatchRequestDTO(
         @field:NotBlank(message = "시작 시간을 선택하세요!")
         @field:Pattern(
             regexp = "^(?:[01][0-9]|2[0-3]):(?:00|10|20|30|40|50)\$",
@@ -50,7 +50,7 @@ class RoutineRequestDTO {
         val isFinish: Boolean,
     )
 
-    data class DeleteRequestDTO(
+    data class RoutineDeleteRequestDTO(
         val id: Long
     )
 }

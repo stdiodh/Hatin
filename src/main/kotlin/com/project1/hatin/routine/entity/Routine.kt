@@ -1,8 +1,7 @@
 package com.project1.hatin.routine.entity
 
 import com.project1.hatin.common.entity.BaseEntity
-import com.project1.hatin.member.entity.Member
-import com.project1.hatin.routine.enums.DayOfWeek
+import com.project1.hatin.common.enums.DayOfWeek
 import jakarta.persistence.*
 
 @Entity

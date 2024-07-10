@@ -10,16 +10,12 @@ import com.project1.hatin.member.entity.Member
 import com.project1.hatin.member.entity.MemberRole
 import com.project1.hatin.member.repository.MemberRepository
 import com.project1.hatin.member.repository.MemberRoleRepository
-import com.project1.hatin.routine.dto.RoutineRequestDTO.CreateRequestDTO
+import com.project1.hatin.routine.dto.RoutineRequestDTO.RoutineCreateRequestDTO
 import com.project1.hatin.routine.service.RoutineService
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.transaction.Transactional
-import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
-import org.springframework.security.core.Authentication
-import org.springframework.security.core.context.SecurityContextHolder
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 
@@ -35,14 +31,14 @@ class MemberService (
     private val passwordEncoder: PasswordEncoder
 
 ){
-    fun signUp(memberRequestDto : MemberRequestDto, createRequestDTOList: List<CreateRequestDTO>) : String {
+    fun signUp(memberRequestDto : MemberRequestDto, routineCreateRequestDTOList: List<RoutineCreateRequestDTO>) : String {
         var member: Member? = memberRepository.findByuserId(memberRequestDto.userId)
 
         if (member != null){
             throw InvaliduserIdException(fieldName = "userId", massage = "이미 가입한 사용자 아이디입니다!")
         }
 
-        val savedRoutine = routineService.createRoutineList(createRequestDTOList)
+        val savedRoutine = routineService.createRoutineList(routineCreateRequestDTOList)
 
         member = Member (
             userId = memberRequestDto.userId,
