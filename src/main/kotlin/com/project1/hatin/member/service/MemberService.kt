@@ -8,6 +8,7 @@ import com.project1.hatin.common.exception.member.InvaliduserIdException
 import com.project1.hatin.member.dto.LoginDto
 import com.project1.hatin.member.dto.MemberRequestDto
 import com.project1.hatin.member.dto.MemberResponseDto
+import com.project1.hatin.member.dto.PasswordResetRequest
 import com.project1.hatin.member.entity.Member
 import com.project1.hatin.member.entity.MemberRole
 import com.project1.hatin.member.entity.PasswordResetCode
@@ -125,5 +126,20 @@ class MemberService (
     fun validateResetCode(userId: String, code: String): Boolean {
         val passwordResetCode = codeRepository.findByCodeAndUserId(code, userId)
         return passwordResetCode != null && passwordResetCode.expiryData.isAfter(LocalDateTime.now())
+    }
+
+    fun handlePasswordReset(passwordResetRequest: PasswordResetRequest) : String {
+        val user = findByUserId(passwordResetRequest.userId)
+            ?: throw PostException(msg = "사용자를 찾을 수 없습니다.")
+
+
+        if (!validateResetCode(passwordResetRequest.userId, passwordResetRequest.code)) {
+            throw PostException(msg = "인증코드가 정확하지 않습니다!")
+        }
+
+        user.password = passwordResetRequest.newPassword
+        passwordSave(user)
+
+        return "비밀번호가 변경되었습니다."
     }
 }
