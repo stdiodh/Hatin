@@ -5,10 +5,7 @@ import com.project1.hatin.common.dto.TokenInfo
 import com.project1.hatin.common.enums.Role
 import com.project1.hatin.common.exception.PostException
 import com.project1.hatin.common.exception.member.InvaliduserIdException
-import com.project1.hatin.member.dto.LoginDto
-import com.project1.hatin.member.dto.MemberRequestDto
-import com.project1.hatin.member.dto.MemberResponseDto
-import com.project1.hatin.member.dto.PasswordResetRequest
+import com.project1.hatin.member.dto.*
 import com.project1.hatin.member.entity.Member
 import com.project1.hatin.member.entity.MemberRole
 import com.project1.hatin.member.entity.PasswordResetCode
@@ -88,6 +85,14 @@ class MemberService (
             ?: throw PostException(msg = "존재하지 않는 사용자 입니다!")
         return targetUser.toResponse()
     }
+
+    //이메일 찾기
+    fun finduserId(findUserIdRequest: findUserIdRequest): String {
+        val user = memberRepository.findBynickNameAndPhoneNumber(findUserIdRequest.nickName, findUserIdRequest.phoneNumber)
+            ?: throw PostException("사용자를 찾을 수 없습니다.")
+        return user.userId
+    }
+
 
     fun findByUserId(userId: String): Member? {
         return memberRepository.findByuserId(userId)

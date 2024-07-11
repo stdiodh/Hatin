@@ -28,9 +28,9 @@ data class PasswordResetRequest(
     private val _newPassword: String
 ) {
     val userId : String
-        get() = _userId!!
+        get() = _userId
     val code : String
-        get() = _code!!
+        get() = _code
     val newPassword : String
-        get() = _newPassword!!
+        get() = _newPassword
 }

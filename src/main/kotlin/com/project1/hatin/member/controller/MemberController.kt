@@ -7,6 +7,7 @@ import com.project1.hatin.member.dto.LoginDto
 import com.project1.hatin.member.dto.MemberDto.SignUpRoutineRequest
 import com.project1.hatin.member.dto.MemberResponseDto
 import com.project1.hatin.member.dto.PasswordResetRequest
+import com.project1.hatin.member.dto.findUserIdRequest
 import com.project1.hatin.member.service.MemberService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
@@ -52,6 +53,16 @@ class MemberController (
         val id = (SecurityContextHolder.getContext().authentication.principal as CustomUser).id
         val result = memberService.searchMyInfo(id)
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponse(data = result))
+    }
+
+    @Operation(summary = "사용자 아이디 찾기", description = "이름과 전화번호를 이용하여 유저 아이디를 찾는 API 입니다.")
+    @PostMapping("/find-user-id")
+    fun findUserId(
+        @Valid @RequestBody findUserIdRequest: findUserIdRequest,
+    ): ResponseEntity<BaseResponse<String>> {
+        val result = memberService.finduserId(findUserIdRequest)
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(BaseResponse(data = result))
     }
 
     @Operation(summary = "사용자 비밀번호 변경 요청", description = "사용자 비밀번호에 대한 코드를 만드는 API 입니다.")
