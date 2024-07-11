@@ -47,6 +47,14 @@ class MemberService (
             throw InvaliduserIdException(fieldName = "userId", massage = "이미 가입한 사용자 아이디입니다!")
         }
 
+        if (memberRepository.existsBynickName(memberRequestDto.nickName)) {
+            throw InvaliduserIdException(fieldName = "nickName", massage = "이미 사용중인 닉네임입니다!")
+        }
+
+        if (memberRepository.existsByphoneNumber(memberRequestDto.phoneNumber)) {
+            throw InvaliduserIdException(fieldName = "phoneNumber", massage = "이미 사용중인 핸드폰 번호입니다!")
+        }
+
         val savedRoutine = routineService.createRoutineList(routineCreateRequestDTOList)
 
         member = Member (
@@ -86,7 +94,6 @@ class MemberService (
         return targetUser.toResponse()
     }
 
-    //이메일 찾기
     fun finduserId(findUserIdRequest: findUserIdRequest): String {
         val user = memberRepository.findBynickNameAndPhoneNumber(findUserIdRequest.nickName, findUserIdRequest.phoneNumber)
             ?: throw PostException("사용자를 찾을 수 없습니다.")
