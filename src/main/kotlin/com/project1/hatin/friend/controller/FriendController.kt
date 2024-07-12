@@ -11,12 +11,8 @@ import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
-import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.*
 
 @Tag(name = "친구 추가 Api 컨트롤러", description = "친구 목록 추가, 삭제하는 Api 명세서입니다.")
 @Controller
@@ -46,7 +42,16 @@ class friendController (
     }
 
 
+    @Operation(summary = "친구 삭제", description = "사용자 친구 삭제하는 API 입니다.")
+    @SecurityRequirement(name = "bearerAuth")
+    @DeleteMapping("/delete-friend")
+    fun deleteFriend(
+        @Valid @RequestBody friendRequestDto: FriendRequestDto, @AuthenticationPrincipal userInfo: CustomUser
+    ): ResponseEntity<BaseResponse<String>> {
+        val result = friendService.deleteFriend(userInfo, friendRequestDto.friendnickName)
 
-
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(BaseResponse(data = result))
+    }
 
 }

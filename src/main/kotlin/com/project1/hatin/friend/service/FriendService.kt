@@ -50,5 +50,24 @@ class FriendService (
         return mutualFriend.map { it.nickName }
     }
 
+    fun deleteFriend(userInfo: CustomUser, friendNickname: String): String {
+        val targetUser = memberRepository.findByIdOrNull(userInfo.id)
+            ?:throw PostException("사용자를 찾을 수 없습니다!")
+
+        val friend = memberRepository.findBynickName(friendNickname)
+            ?:throw PostException("친구를 찾을 수 없습니다!")
+
+        if (targetUser.userId == friend.userId) {
+            throw PostException("자신을 친구 목록에서 삭제할 수 없습니다!")
+        }
+
+        val friendRelationship = friendRepository.findByMemberAndFriend(targetUser, friend)
+            ?: friendRepository.findByMemberAndFriend(friend, targetUser)
+            ?: throw PostException("{$friend.nickName}님은 친구 목록에 없습니다!")
+
+        friendRepository.delete(friendRelationship)
+
+        return "${friendNickname}님을 친구 목록에서 삭제하였습니다!"
+    }
 
 }
