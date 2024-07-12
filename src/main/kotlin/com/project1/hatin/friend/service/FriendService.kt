@@ -24,13 +24,31 @@ class FriendService (
             throw PostException("자신을 친구로 추가할 수 없습니다!")
         }
 
-        if (friendRepository.findByMemberAndFriend(targetUser, friend) != null) {
+        if (friendRepository.findByMemberAndFriend(targetUser, friend) != null ||
+            friendRepository.findByMemberAndFriend(friend, targetUser) != null) {
             throw PostException("이미 친구로 추가된 사용자입니다!")
         }
+
 
         val friendRelationship = Friend(member = targetUser, friend = friend)
         friendRepository.save(friendRelationship)
 
-        return "${friendNickname}님이 ${targetUser.nickName}님의 친구로 추가되었습니다."
+        return "${friendNickname}님을 친구로 추가하였습니다."
     }
+
+    fun getFriendList(userInfo: CustomUser) : List<String> {
+        val targetUser = memberRepository.findByIdOrNull(userInfo.id)
+            ?:throw PostException("사용자를 찾을 수 없습니다!")
+
+        //내 목록
+        val friends = friendRepository.findAllByMember(targetUser).map { it.friend }
+        //나를 친구로 추가한 목록
+        val reverseFriends = friendRepository.findAllByFriend(targetUser).map { it.member }
+        //중복 제거
+        val mutualFriend = (friends + reverseFriends).distinct()
+
+        return mutualFriend.map { it.nickName }
+    }
+
+
 }

@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Controller
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -33,4 +34,19 @@ class friendController (
         return ResponseEntity.status(HttpStatus.OK)
             .body(BaseResponse(data = result))
     }
+
+    @Operation(summary = "친구 목록", description = "사용자 친구 목록을 확인하는 API 입니다.")
+    @SecurityRequirement(name = "bearerAuth")
+    @GetMapping("/list")
+    fun getFriend(@AuthenticationPrincipal userInfo: CustomUser): ResponseEntity<BaseResponse<List<String>>> {
+        val result = friendService.getFriendList(userInfo)
+
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(BaseResponse(data = result))
+    }
+
+
+
+
+
 }
