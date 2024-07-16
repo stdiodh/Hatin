@@ -6,6 +6,8 @@ import com.project1.hatin.common.dto.TokenInfo
 import com.project1.hatin.member.dto.LoginDto
 import com.project1.hatin.member.dto.MemberDto.SignUpRoutineRequest
 import com.project1.hatin.member.dto.MemberResponseDto
+import com.project1.hatin.member.dto.PasswordResetRequest
+import com.project1.hatin.member.dto.findUserIdRequest
 import com.project1.hatin.member.service.MemberService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
@@ -16,12 +18,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.ui.Model
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @Tag(name = "회원 Api 컨트롤러", description = "회원생성, 로그인, 전체 조회 Api 명세서입니다.")
 @RestController
@@ -34,7 +31,7 @@ class MemberController (
     private fun signUpRoutine(@Parameter(description = "사용자가 회원가입 정보 데이터") @Valid @RequestBody signUpRoutineRequest: SignUpRoutineRequest
     )
             : ResponseEntity<BaseResponse<String>>{
-        val result = memberService.signUp(signUpRoutineRequest.memberRequestDto,signUpRoutineRequest.createRequestDTOList)
+        val result = memberService.signUp(signUpRoutineRequest.memberRequestDto,signUpRoutineRequest.routineCreateRequestDTOList)
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(BaseResponse(data = result))
     }
@@ -58,6 +55,16 @@ class MemberController (
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponse(data = result))
     }
 
+    @Operation(summary = "사용자 아이디 찾기", description = "이름과 전화번호를 이용하여 유저 아이디를 찾는 API 입니다.")
+    @PostMapping("/find-user-id")
+    fun findUserId(
+        @Valid @RequestBody findUserIdRequest: findUserIdRequest,
+    ): ResponseEntity<BaseResponse<String>> {
+        val result = memberService.finduserId(findUserIdRequest)
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(BaseResponse(data = result))
+    }
+
     @Operation(summary = "사용자 비밀번호 변경 요청", description = "사용자 비밀번호에 대한 코드를 만드는 API 입니다.")
     @PostMapping("/request-password-reset")
     fun requestPasswordReset(@Parameter(required = true,description = "사용자 이메일") @RequestParam userId: String, model: Model): ResponseEntity<BaseResponse<Model>> {
@@ -73,29 +80,12 @@ class MemberController (
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponse(data = result))
     }
 
-    @Operation(summary = "사용자 비밀번호 변경", description = "사용자 비밀번호 초기화 API 입니다.")
+    @Operation(summary = "사용자 비밀번호 변경", description = "사용자 비밀번호 변경 API 입니다.")
     @PostMapping("/reset-password")
     fun handlePasswordReset(
-        @Parameter(required = true,description = "유저 이메일")
-        @RequestParam userId: String,
-        @Parameter(required = true,description = "인증 코드")
-        @RequestParam code: String,
-        @Parameter(required = true,description = "새로운 비밀번호")
-        @RequestParam newPassword: String,
-        model: Model
-    ): ResponseEntity<BaseResponse<Model>>  {
-        if (!memberService.validateResetCode(userId, code)) {
-            val result = model.addAttribute("오류 발생", "인증코드가 정확하지 않습니다!")
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(BaseResponse(data = result))
-        }
-
-        val user = memberService.findByUserId(userId)
-        user!!.password = newPassword
-        memberService.passwordSave(user)
-
-        val result = model.addAttribute("변경 완료", "비밀번호가 변경되었습니다.")
-
+        @Valid @RequestBody passwordResetRequest: PasswordResetRequest,
+    ): ResponseEntity<BaseResponse<String>> {
+        val result = memberService.handlePasswordReset(passwordResetRequest)
         return ResponseEntity.status(HttpStatus.OK)
             .body(BaseResponse(data = result))
     }

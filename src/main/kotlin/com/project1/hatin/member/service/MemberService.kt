@@ -5,19 +5,18 @@ import com.project1.hatin.common.dto.TokenInfo
 import com.project1.hatin.common.enums.Role
 import com.project1.hatin.common.exception.PostException
 import com.project1.hatin.common.exception.member.InvaliduserIdException
-import com.project1.hatin.member.dto.LoginDto
-import com.project1.hatin.member.dto.MemberRequestDto
-import com.project1.hatin.member.dto.MemberResponseDto
+import com.project1.hatin.member.dto.*
 import com.project1.hatin.member.entity.Member
 import com.project1.hatin.member.entity.MemberRole
 import com.project1.hatin.member.entity.PasswordResetCode
 import com.project1.hatin.member.repository.MemberRepository
 import com.project1.hatin.member.repository.MemberRoleRepository
-import com.project1.hatin.member.repository.PasswordResetCodeRepository
-import com.project1.hatin.routine.dto.RoutineRequestDTO.CreateRequestDTO
+
+import com.project1.hatin.routine.dto.RoutineRequestDTO.RoutineCreateRequestDTO
 import com.project1.hatin.routine.service.RoutineService
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.transaction.Transactional
+import com.project1.hatin.member.repository.PasswordResetCodeRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.mail.SimpleMailMessage
 import org.springframework.mail.javamail.JavaMailSender
@@ -41,14 +40,22 @@ class MemberService (
     private val codeRepository: PasswordResetCodeRepository
 
 ){
-    fun signUp(memberRequestDto : MemberRequestDto, createRequestDTOList: List<CreateRequestDTO>) : String {
+    fun signUp(memberRequestDto : MemberRequestDto, routineCreateRequestDTOList: List<RoutineCreateRequestDTO>) : String {
         var member: Member? = memberRepository.findByuserId(memberRequestDto.userId)
 
         if (member != null){
             throw InvaliduserIdException(fieldName = "userId", massage = "이미 가입한 사용자 아이디입니다!")
         }
 
-        val savedRoutine = routineService.createRoutineList(createRequestDTOList)
+        if (memberRepository.existsBynickName(memberRequestDto.nickName)) {
+            throw InvaliduserIdException(fieldName = "nickName", massage = "이미 사용중인 닉네임입니다!")
+        }
+
+        if (memberRepository.existsByphoneNumber(memberRequestDto.phoneNumber)) {
+            throw InvaliduserIdException(fieldName = "phoneNumber", massage = "이미 사용중인 핸드폰 번호입니다!")
+        }
+
+        val savedRoutine = routineService.createRoutineList(routineCreateRequestDTOList)
 
         member = Member (
             userId = memberRequestDto.userId,
@@ -87,6 +94,13 @@ class MemberService (
         return targetUser.toResponse()
     }
 
+    fun finduserId(findUserIdRequest: findUserIdRequest): String {
+        val user = memberRepository.findBynickNameAndPhoneNumber(findUserIdRequest.nickName, findUserIdRequest.phoneNumber)
+            ?: throw PostException("사용자를 찾을 수 없습니다.")
+        return user.userId
+    }
+
+
     fun findByUserId(userId: String): Member? {
         return memberRepository.findByuserId(userId)
     }
@@ -124,5 +138,20 @@ class MemberService (
     fun validateResetCode(userId: String, code: String): Boolean {
         val passwordResetCode = codeRepository.findByCodeAndUserId(code, userId)
         return passwordResetCode != null && passwordResetCode.expiryData.isAfter(LocalDateTime.now())
+    }
+
+    fun handlePasswordReset(passwordResetRequest: PasswordResetRequest) : String {
+        val user = findByUserId(passwordResetRequest.userId)
+            ?: throw PostException(msg = "사용자를 찾을 수 없습니다.")
+
+
+        if (!validateResetCode(passwordResetRequest.userId, passwordResetRequest.code)) {
+            throw PostException(msg = "인증코드가 정확하지 않습니다!")
+        }
+
+        user.password = passwordResetRequest.newPassword
+        passwordSave(user)
+
+        return "비밀번호가 변경되었습니다."
     }
 }
