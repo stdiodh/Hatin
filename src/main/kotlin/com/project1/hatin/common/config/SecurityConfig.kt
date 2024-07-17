@@ -35,7 +35,7 @@ class SecurityConfig(
             }
             .authorizeHttpRequests{
                 it.requestMatchers("/api/member/join", "/api/member/login").anonymous()
-                    .requestMatchers("/api/member/info", "api/friend/**").hasRole("MEMBER")
+                    .requestMatchers("/api/member/info", "api/friend/**", "api/feed/**").hasRole("MEMBER")
                     .anyRequest().permitAll()
             }
             .addFilterBefore(
