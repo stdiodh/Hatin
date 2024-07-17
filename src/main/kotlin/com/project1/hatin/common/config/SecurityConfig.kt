@@ -33,9 +33,10 @@ class SecurityConfig(
                     SessionCreationPolicy.STATELESS
                 )
             }
-            .authorizeHttpRequests{
+            .authorizeHttpRequests {
                 it.requestMatchers("/api/member/join", "/api/member/login").anonymous()
-                    .requestMatchers("/api/member/info", "api/friend/**", "api/feed/**").hasRole("MEMBER")
+                    .requestMatchers("/api/feed/search/**").permitAll()
+                    .requestMatchers("/api/member/info", "/api/friend/**", "/api/feed/**").hasRole("MEMBER")
                     .anyRequest().permitAll()
             }
             .addFilterBefore(

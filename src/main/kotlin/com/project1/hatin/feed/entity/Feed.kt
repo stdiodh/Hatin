@@ -6,7 +6,7 @@ import com.project1.hatin.member.entity.Member
 import jakarta.persistence.*
 
 @Entity
-class FeedEntity(
+class Feed(
     @Column(nullable = false)
     var title: String,
 
