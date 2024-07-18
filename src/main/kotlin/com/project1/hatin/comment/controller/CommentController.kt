@@ -15,7 +15,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 
-@Tag(name = "피드 댓글 Api 컨트롤러", description = "패드 댓글 추가, 조회, 수정, 삭제 Api 명세서입니다.")
+@Tag(name = "댓글 Api 컨트롤러", description = "댓글 추가, 조회, 수정, 삭제 Api 명세서입니다.")
 @RestController
 @RequestMapping("/api/feed")
 class CommentController(

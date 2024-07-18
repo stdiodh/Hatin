@@ -1,15 +1,18 @@
 package com.project1.hatin.feed.service
 
 import com.project1.hatin.common.dto.CustomUser
+import com.project1.hatin.common.enums.DayOfWeek
+import com.project1.hatin.common.enums.FeedType
 import com.project1.hatin.common.exception.PostException
 import com.project1.hatin.feed.dto.FeedRequestDTO.FeedPatchRequestDTO
 import com.project1.hatin.feed.repository.FeedRepository
 import org.springframework.stereotype.Service
 import com.project1.hatin.feed.dto.FeedRequestDTO.FeedCreateRequestDTO
+import com.project1.hatin.feed.dto.FeedResponseDTO.FeedSearchResponseDTO
 import com.project1.hatin.feed.dto.FeedResponseDTO.FeedPatchResponseDTO
 import com.project1.hatin.feed.dto.FeedResponseDTO.FeedCreateResponseDTO
 import com.project1.hatin.feed.dto.FeedResponseDTO.FeedShowResponseDTO
-import com.project1.hatin.feed.entity.FeedEntity
+import com.project1.hatin.feed.entity.Feed
 import com.project1.hatin.member.repository.MemberRepository
 import jakarta.transaction.Transactional
 import org.springframework.data.repository.findByIdOrNull
@@ -21,10 +24,14 @@ class FeedService(
     private val feedRepository: FeedRepository,
     private val memberRepository: MemberRepository
 ) {
-    fun showAllFeed(type: String):List<FeedShowResponseDTO> {
-        val findType: Boolean = if (type == "normal") true else false
+    fun showAllFeed(type: FeedType):List<FeedShowResponseDTO> {
 
-        val targetList = feedRepository.findAllByType(findType)
+        val feedType: Boolean = when (type) {
+            FeedType.NORMAL -> true
+            FeedType.ROUTINE -> false
+        }
+
+        val targetList = feedRepository.findAllByType(feedType)
 
         val result = mutableListOf<FeedShowResponseDTO>()
 
@@ -33,7 +40,10 @@ class FeedService(
                 id = target.id,
                 title = target.title,
                 content = target.content,
-                type = target.type,
+                type = when (target.type) {
+                    true -> FeedType.NORMAL
+                    false -> FeedType.ROUTINE
+                },
                 weekDay = target.weekDay,
                 createAt = target.createdAt,
                 updateAt = target.updatedAt,
@@ -53,7 +63,10 @@ class FeedService(
             id = target.id,
             title = target.title,
             content = target.content,
-            type = target.type,
+            type = when (target.type) {
+                true -> FeedType.NORMAL
+                false -> FeedType.ROUTINE
+            },
             weekDay = target.weekDay,
             createAt = target.createdAt,
             updateAt = target.updatedAt,
@@ -64,16 +77,82 @@ class FeedService(
         return result
     }
 
+    fun searchFeed(
+        type: FeedType,
+        keyword: String?,
+        weekDay: DayOfWeek?,
+        nameDirection: String,
+        dateDirection: String
+    ): List<FeedSearchResponseDTO> {
+
+        val feedType: Boolean = when (type) {
+            FeedType.NORMAL -> true
+            FeedType.ROUTINE -> false
+        }
+
+        val feeds = if (keyword == null) {
+            if(weekDay != null){
+                feedRepository.findAllByWeekDayAndType(weekDay,feedType)
+            }
+            else{
+                feedRepository.findAllByType(feedType)
+            }
+        } else if (weekDay != null) {
+            feedRepository.findByTitleContainingIgnoreCaseAndWeekDayAndType(keyword, weekDay, feedType)
+        } else {
+            feedRepository.findByTitleContainingIgnoreCaseAndType(keyword, feedType)
+        }
+
+        val nameComparator = Comparator<Feed> { f1, f2 ->
+            when {
+                nameDirection.equals("asc", true) -> f1.title.compareTo(f2.title)
+                nameDirection.equals("desc", true) -> f2.title.compareTo(f1.title)
+                else -> 0
+            }
+        }
+
+        val dateComparator = Comparator<Feed> { f1, f2 ->
+            when {
+                dateDirection.equals("asc", true) -> f1.createdAt?.compareTo(f2.createdAt) ?: 0
+                dateDirection.equals("desc", true) -> f2.createdAt?.compareTo(f1.createdAt) ?: 0
+                else -> 0
+            }
+        }
+
+        val sortedFeeds = feeds.sortedWith(nameComparator.thenComparing(dateComparator))
+
+        return sortedFeeds.map { feed ->
+            FeedSearchResponseDTO(
+                id = feed.id,
+                title = feed.title,
+                content = feed.content,
+                type = when (feed.type) {
+                    true -> FeedType.NORMAL
+                    false -> FeedType.ROUTINE
+                },
+                weekDay = feed.weekDay,
+                createAt = feed.createdAt,
+                updateAt = feed.updatedAt,
+                like = feed.likeCount
+            )
+        }
+    }
+
     fun createFeed(feedCreateRequestDTO: FeedCreateRequestDTO, userInfo: CustomUser) : FeedCreateResponseDTO {
         val targetUser = memberRepository.findByIdOrNull(userInfo.id)
             ?: throw PostException(msg = "존재하지 않는 사용자입니다.")
 
-        val feedEntity = FeedEntity(
+        val feedType: Boolean = when (feedCreateRequestDTO.type) {
+            FeedType.NORMAL -> true
+            FeedType.ROUTINE -> false
+        }
+
+        val feed = Feed(
             title = feedCreateRequestDTO.title,
             content = feedCreateRequestDTO.content,
             likeCount = 0,
-            type = feedCreateRequestDTO.type,
-            weekDay = if (feedCreateRequestDTO.type) {
+            type = feedType,
+            weekDay = if (feedType) {
                 null
             } else {
                 feedCreateRequestDTO.weekDay
@@ -81,16 +160,19 @@ class FeedService(
             member = targetUser
         )
 
-        val result = feedRepository.save(feedEntity)
+        val result = feedRepository.save(feed)
 
-        targetUser.feedEntityList?.add(result)
+        targetUser.feedList?.add(result)
         memberRepository.save(targetUser)
 
         return FeedCreateResponseDTO(
             id = result.id,
             title = result.title,
             content = result.content,
-            type = result.type,
+            type = when (result.type) {
+                true -> FeedType.NORMAL
+                false -> FeedType.ROUTINE
+            },
             weekDay = result.weekDay,
             createAt = result.createdAt,
             updateAt = result.updatedAt,
@@ -102,14 +184,18 @@ class FeedService(
         val targetUser = memberRepository.findByIdOrNull(userInfo.id)
             ?: throw PostException(msg = "존재하지 않는 사용자 입니다.")
 
-        var target = targetUser.feedEntityList?.find { it.id == id }
+        var target = targetUser.feedList?.find { it.id == id }
 
         if (target == null) throw PostException(msg = "사용자가 작성한 게시글 ID가 아닙니다.")
 
+        val feedType: Boolean = when (feedPatchRequestDTO.type) {
+            FeedType.NORMAL -> true
+            FeedType.ROUTINE -> false
+        }
 
         target.title = feedPatchRequestDTO.title
         target.content = feedPatchRequestDTO.content
-        target.type = feedPatchRequestDTO.type
+        target.type = feedType
         target.weekDay = feedPatchRequestDTO.weekDay
         target.likeCount = feedPatchRequestDTO.like
 
@@ -120,7 +206,10 @@ class FeedService(
             id = target.id,
             title = target.title,
             content = target.content,
-            type = target.type,
+            type = when (target.type) {
+                true -> FeedType.NORMAL
+                false -> FeedType.ROUTINE
+            },
             weekDay = target.weekDay,
             createAt = target.createdAt,
             updateAt = target.updatedAt,
@@ -132,7 +221,7 @@ class FeedService(
         val targetUser = memberRepository.findByIdOrNull(userInfo.id)
             ?: throw PostException(msg = "존재하지 않는 사용자 입니다.")
 
-        val foundFeed = targetUser.feedEntityList?.find { it.id == id }
+        val foundFeed = targetUser.feedList?.find { it.id == id }
 
         if (foundFeed == null) throw PostException(msg = "사용자가 작성한 게시글 ID가 아닙니다.")
 
