@@ -1,7 +1,7 @@
 package com.project1.hatin.comment.entity
 
 import com.project1.hatin.common.entity.BaseEntity
-import com.project1.hatin.feed.entity.FeedEntity
+import com.project1.hatin.feed.entity.Feed
 import com.project1.hatin.member.entity.Member
 import jakarta.persistence.*
 
@@ -12,7 +12,7 @@ class CommentEntity(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(foreignKey = ForeignKey(name = "fk_feed_comment_feed_id"))
-    val feed: FeedEntity,
+    val feed: Feed,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(foreignKey = ForeignKey(name = "fk_member_comment_author_id"))

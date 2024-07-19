@@ -2,13 +2,17 @@ package com.project1.hatin.feed.controller
 
 import com.project1.hatin.common.dto.BaseResponse
 import com.project1.hatin.common.dto.CustomUser
+import com.project1.hatin.common.enums.DayOfWeek
+import com.project1.hatin.common.enums.FeedType
 import com.project1.hatin.feed.service.FeedService
 import io.swagger.v3.oas.annotations.tags.Tag
 import com.project1.hatin.feed.dto.FeedRequestDTO.FeedPatchRequestDTO
 import com.project1.hatin.feed.dto.FeedRequestDTO.FeedCreateRequestDTO
+import com.project1.hatin.feed.dto.FeedResponseDTO
 import com.project1.hatin.feed.dto.FeedResponseDTO.FeedCreateResponseDTO
 import com.project1.hatin.feed.dto.FeedResponseDTO.FeedPatchResponseDTO
 import com.project1.hatin.feed.dto.FeedResponseDTO.FeedShowResponseDTO
+import com.project1.hatin.feed.dto.FeedResponseDTO.FeedSearchResponseDTO
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
@@ -27,26 +31,31 @@ class FeedController(
 ) {
     @Operation(summary = "게시글 전체 조회", description = "게시글 전체 조회 API 입니다.")
     @GetMapping("/list/{type}")
-    private fun showAllFeed(@Parameter(required = true,description = "게시글 타입") @PathVariable(name = "type") type : String)
+    private fun showAllFeed(@Parameter(required = true,description = "게시글 타입") @PathVariable(name = "type") type : FeedType)
     : ResponseEntity<BaseResponse<List<FeedShowResponseDTO>>> {
         val result = feedService.showAllFeed(type)
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponse(data = result))
     }
 
     @Operation(summary = "게시글 조회", description = "게시글 조회 API 입니다.")
-    @GetMapping("/{id}")
+    @GetMapping("/get/{id}")
     private fun showFeed(@Parameter(required = true,description = "게시글 ID") @PathVariable(name = "id") id : Long)
     : ResponseEntity<BaseResponse<FeedShowResponseDTO>> {
         val result = feedService.showFeed(id)
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponse(data = result))
     }
 
-//    @Operation(summary = "게시글 검색", description = "게시글 검색 API 입니다.")
-//    @GetMapping
-//    private fun searchFeed() : ResponseEntity<BaseResponse<SearchResponseDTO>> {
-//        val result = feedService.searchFeed()
-//        return ResponseEntity.status(HttpStatus.OK).body(BaseResponse(data = result))
-//    }
+    @Operation(summary = "게시글 검색", description = "게시글 검색 API 입니다.")
+    @GetMapping("/search/{type}")
+    private fun searchFeed(@Parameter(required = true,description = "게시글 타입") @PathVariable(name = "type") type : FeedType,
+                           @Parameter(description = "검색할 키워드") @RequestParam keyword: String?,
+                           @Parameter(description = "요일 검색 조건 추가 유무") @RequestParam(required = false) weekDay: DayOfWeek?,
+                           @Parameter(description = "제목 기준으로 정렬 방향") @RequestParam(defaultValue = "asc") nameDirection: String,
+                           @Parameter(description = "날짜 기준으로 정렬 방향") @RequestParam(defaultValue = "asc") dateDirection: String)
+    : ResponseEntity<BaseResponse<List<FeedSearchResponseDTO>>> {
+        val result = feedService.searchFeed(type,keyword,weekDay,nameDirection,dateDirection)
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponse(data = result))
+    }
 
     @Operation(summary = "게시글 생성", description = "게시글 생성 API 입니다.")
     @SecurityRequirement(name = "bearerAuth")
@@ -80,5 +89,10 @@ class FeedController(
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponse(data = "게시글이 삭제되었습니다."))
     }
 
-
+    @Operation(summary = "추천 게시글 조회", description = "추천 게시글 조회 API 입니다.")
+    @GetMapping("/recommend")
+    fun getRecommendedFeeds(): ResponseEntity<BaseResponse<List<FeedShowResponseDTO>>> {
+        val result = feedService.getRecommendedFeeds()
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponse(data = result))
+    }
 }

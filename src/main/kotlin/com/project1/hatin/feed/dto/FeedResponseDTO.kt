@@ -1,6 +1,7 @@
 package com.project1.hatin.feed.dto
 
 import com.project1.hatin.common.enums.DayOfWeek
+import com.project1.hatin.common.enums.FeedType
 import java.time.LocalDateTime
 
 class FeedResponseDTO {
@@ -8,7 +9,7 @@ class FeedResponseDTO {
         var id: Long?,
         val title: String,
         val content: String,
-        val type: Boolean,
+        val type : FeedType,
         val weekDay: DayOfWeek?,
         val createAt: LocalDateTime?,
         val updateAt: LocalDateTime?,
@@ -20,7 +21,7 @@ class FeedResponseDTO {
         var id: Long?,
         val title : String,
         val content : String,
-        val type : Boolean,
+        val type : FeedType,
         val weekDay: DayOfWeek?,
         val createAt : LocalDateTime?,
         val updateAt : LocalDateTime?,
@@ -31,7 +32,7 @@ class FeedResponseDTO {
         var id: Long?,
         val title : String,
         val content : String,
-        val type : Boolean,
+        val type : FeedType,
         val weekDay: DayOfWeek?,
         val createAt : LocalDateTime?,
         val updateAt : LocalDateTime?,
@@ -43,7 +44,7 @@ class FeedResponseDTO {
         var id: Long?,
         val title : String,
         val content : String,
-        val type : Boolean,
+        val type : FeedType,
         val weekDay: DayOfWeek?,
         val createAt : LocalDateTime?,
         val updateAt : LocalDateTime?,

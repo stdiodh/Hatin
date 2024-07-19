@@ -4,7 +4,7 @@ package com.project1.hatin.member.entity
 import com.project1.hatin.ban.entity.BanKeyword
 import com.project1.hatin.common.entity.BaseEntity
 import com.project1.hatin.common.enums.Gender
-import com.project1.hatin.feed.entity.FeedEntity
+import com.project1.hatin.feed.entity.Feed
 import com.project1.hatin.member.dto.MemberResponseDto
 import com.project1.hatin.routine.entity.Routine
 import jakarta.persistence.*
@@ -52,7 +52,7 @@ class Member (
 
 
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true, mappedBy = "member")
-    var feedEntityList: MutableList<FeedEntity>? = mutableListOf(),
+    var feedList: MutableList<Feed>? = mutableListOf(),
 
     ) : BaseEntity() {
         fun toResponse() : MemberResponseDto = MemberResponseDto(

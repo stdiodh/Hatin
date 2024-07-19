@@ -39,6 +39,7 @@ class CommentService(
             content = savedComment.content,
             createdAt = savedComment.createdAt!!,
             authorId = savedComment.author.id!!,
+            authorNickname = savedComment.author.nickName,
             parentCommentId = savedComment.parentComment?.id
         )
     }
@@ -69,64 +70,52 @@ class CommentService(
             content = savedComment.content,
             createdAt = savedComment.createdAt!!,
             authorId = savedComment.author.id!!,
+            authorNickname = savedComment.author.nickName,
             parentCommentId = savedComment.parentComment?.id
         )
     }
 
 
-//    @Transactional
-//    fun patchComment(feedId: Long, commentId: Long, commentRequestDTO: CommentRequestDTO, userInfo: CustomUser): CommentResponseDTO {
-//        val author = memberRepository.findByIdOrNull(userInfo.id)
-//            ?: throw PostException("존재하지 않는 사용자입니다.")
-//
-//        val feed = feedRepository.findByIdOrNull(feedId)
-//            ?: throw PostException("존재하지 않는 게시글입니다.")
-//
-//        val targetComment = commentRepository.findByIdOrNull(commentId)
-//            ?: throw PostException("존재하지 않는 댓글입니다.")
-//
-//        if (targetComment.author.id != author.id) {
-//            throw PostException("사용자가 작성한 댓글 ID가 아닙니다.")
-//        }
-//
-//        if (targetComment.feed.id != feed.id) {
-//            throw PostException("해당 댓글은 이 게시물에 속하지 않습니다.")
-//        }
-//
-//        targetComment.content = commentRequestDTO.content
-//
-//        val updatedComment = commentRepository.save(targetComment)
-//
-//        return CommentResponseDTO(
-//            id = updatedComment.id!!,
-//            content = updatedComment.content,
-//            createdAt = updatedComment.createdAt!!,
-//            authorId = updatedComment.author.id!!,
-//            parentCommentId = updatedComment.parentComment?.id
-//        )
-//    }
-//
-//    @Transactional
-//    fun deleteComment(feedId: Long, commentId: Long, userInfo: CustomUser) {
-//        val author = memberRepository.findByIdOrNull(userInfo.id)
-//            ?: throw PostException("존재하지 않는 사용자입니다.")
-//
-//        val feed = feedRepository.findByIdOrNull(feedId)
-//            ?: throw PostException("존재하지 않는 게시글입니다.")
-//
-//        val targetComment = commentRepository.findByIdOrNull(commentId)
-//            ?: throw PostException("존재하지 않는 댓글입니다.")
-//
-//        if (targetComment.author.id != author.id) {
-//            throw PostException("사용자가 작성한 댓글 ID가 아닙니다.")
-//        }
-//
-//        if (targetComment.feed.id != feed.id) {
-//            throw PostException("해당 댓글은 이 게시물에 속하지 않습니다.")
-//        }
-//
-//        commentRepository.deleteById(commentId)
-//    }
+    @Transactional
+    fun patchComment(commentId: Long, commentRequestDTO: CommentRequestDTO, userInfo: CustomUser): CommentResponseDTO {
+        val author = memberRepository.findByIdOrNull(userInfo.id)
+            ?: throw PostException("존재하지 않는 사용자입니다.")
+
+        val targetComment = commentRepository.findByIdOrNull(commentId)
+            ?: throw PostException("존재하지 않는 댓글입니다.")
+
+        if (targetComment.author.id != author.id) {
+            throw PostException("사용자가 작성한 댓글 ID가 아닙니다.")
+        }
+
+        targetComment.content = commentRequestDTO.content
+
+        val updatedComment = commentRepository.save(targetComment)
+
+        return CommentResponseDTO(
+            id = updatedComment.id!!,
+            content = updatedComment.content,
+            createdAt = updatedComment.createdAt!!,
+            authorId = updatedComment.author.id!!,
+            authorNickname = updatedComment.author.nickName,
+            parentCommentId = updatedComment.parentComment?.id
+        )
+    }
+
+    @Transactional
+    fun deleteComment(commentId: Long, userInfo: CustomUser) {
+        val author = memberRepository.findByIdOrNull(userInfo.id)
+            ?: throw PostException("존재하지 않는 사용자입니다.")
+
+        val targetComment = commentRepository.findByIdOrNull(commentId)
+            ?: throw PostException("존재하지 않는 댓글입니다.")
+
+        if (targetComment.author.id != author.id) {
+            throw PostException("사용자가 작성한 댓글 ID가 아닙니다.")
+        }
+
+        commentRepository.deleteById(commentId)
+    }
 
     @Transactional
     fun getCommentsForFeed(feedId: Long): List<CommentResponseDTO> {
@@ -139,6 +128,7 @@ class CommentService(
                 content = comment.content,
                 createdAt = comment.createdAt!!,
                 authorId = comment.author.id!!,
+                authorNickname = comment.author.nickName,
                 parentCommentId = comment.parentComment?.id
             )
         }
