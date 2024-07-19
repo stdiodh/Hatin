@@ -8,6 +8,7 @@ import com.project1.hatin.feed.dto.FeedRequestDTO.FeedPatchRequestDTO
 import com.project1.hatin.feed.repository.FeedRepository
 import org.springframework.stereotype.Service
 import com.project1.hatin.feed.dto.FeedRequestDTO.FeedCreateRequestDTO
+import com.project1.hatin.feed.dto.FeedResponseDTO
 import com.project1.hatin.feed.dto.FeedResponseDTO.FeedSearchResponseDTO
 import com.project1.hatin.feed.dto.FeedResponseDTO.FeedPatchResponseDTO
 import com.project1.hatin.feed.dto.FeedResponseDTO.FeedCreateResponseDTO
@@ -226,5 +227,22 @@ class FeedService(
         if (foundFeed == null) throw PostException(msg = "사용자가 작성한 게시글 ID가 아닙니다.")
 
         feedRepository.deleteById(id)
+    }
+
+    fun getRecommendedFeeds(): List<FeedShowResponseDTO> {
+        val feeds = feedRepository.findTop10ByOrderByLikeCountDesc()
+        return feeds.map { feed ->
+            FeedShowResponseDTO(
+                id = feed.id!!,
+                title = feed.title,
+                content = feed.content,
+                type = if (feed.type) FeedType.NORMAL else FeedType.ROUTINE,
+                weekDay = feed.weekDay,
+                createAt = feed.createdAt,
+                updateAt = feed.updatedAt,
+                nickName = feed.member.nickName,
+                like = feed.likeCount
+            )
+        }
     }
 }

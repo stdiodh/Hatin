@@ -8,6 +8,7 @@ import com.project1.hatin.feed.service.FeedService
 import io.swagger.v3.oas.annotations.tags.Tag
 import com.project1.hatin.feed.dto.FeedRequestDTO.FeedPatchRequestDTO
 import com.project1.hatin.feed.dto.FeedRequestDTO.FeedCreateRequestDTO
+import com.project1.hatin.feed.dto.FeedResponseDTO
 import com.project1.hatin.feed.dto.FeedResponseDTO.FeedCreateResponseDTO
 import com.project1.hatin.feed.dto.FeedResponseDTO.FeedPatchResponseDTO
 import com.project1.hatin.feed.dto.FeedResponseDTO.FeedShowResponseDTO
@@ -37,7 +38,7 @@ class FeedController(
     }
 
     @Operation(summary = "게시글 조회", description = "게시글 조회 API 입니다.")
-    @GetMapping("/{id}")
+    @GetMapping("/get/{id}")
     private fun showFeed(@Parameter(required = true,description = "게시글 ID") @PathVariable(name = "id") id : Long)
     : ResponseEntity<BaseResponse<FeedShowResponseDTO>> {
         val result = feedService.showFeed(id)
@@ -88,5 +89,10 @@ class FeedController(
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponse(data = "게시글이 삭제되었습니다."))
     }
 
-
+    @Operation(summary = "추천 게시글 조회", description = "추천 게시글 조회 API 입니다.")
+    @GetMapping("/recommend")
+    fun getRecommendedFeeds(): ResponseEntity<BaseResponse<List<FeedShowResponseDTO>>> {
+        val result = feedService.getRecommendedFeeds()
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponse(data = result))
+    }
 }

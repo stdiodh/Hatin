@@ -10,5 +10,5 @@ interface FeedRepository : JpaRepository<Feed,Long> {
     fun findByTitleContainingIgnoreCaseAndWeekDayAndType(keyword: String, weekDay: DayOfWeek, type: Boolean): List<Feed>
     fun findAllByWeekDayAndType(weekDay: DayOfWeek, type: Boolean): List<Feed>
 
-
+    fun findTop10ByOrderByLikeCountDesc(): List<Feed>
 }
