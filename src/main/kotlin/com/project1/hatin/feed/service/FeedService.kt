@@ -1,9 +1,12 @@
 package com.project1.hatin.feed.service
 
+import com.project1.hatin.comment.dto.CommentResponseDTO
+import com.project1.hatin.comment.repository.CommentRepository
 import com.project1.hatin.common.dto.CustomUser
 import com.project1.hatin.common.enums.DayOfWeek
 import com.project1.hatin.common.enums.FeedType
 import com.project1.hatin.common.exception.PostException
+import com.project1.hatin.feed.dto.FeedDto
 import com.project1.hatin.feed.dto.FeedRequestDTO.FeedPatchRequestDTO
 import com.project1.hatin.feed.repository.FeedRepository
 import org.springframework.stereotype.Service
@@ -23,7 +26,8 @@ import org.springframework.data.repository.findByIdOrNull
 @Transactional
 class FeedService(
     private val feedRepository: FeedRepository,
-    private val memberRepository: MemberRepository
+    private val memberRepository: MemberRepository,
+    private val commentRepository: CommentRepository
 ) {
     fun showAllFeed(type: FeedType):List<FeedShowResponseDTO> {
 
@@ -49,33 +53,44 @@ class FeedService(
                 createAt = target.createdAt,
                 updateAt = target.updatedAt,
                 nickName = target.member.nickName,
-                like = target.likeCount
+                like = target.likeCount,
             )
             result.add(dto)
         }
         return result
     }
 
-    fun showFeed(id:Long): FeedShowResponseDTO {
-        val target = feedRepository.findByIdOrNull(id)
+    fun showFeedWithComments(id: Long): FeedDto.FeedWithCommentsResponseDTO {
+        val feed = feedRepository.findByIdOrNull(id)
             ?: throw PostException(msg = "존재하지 않는 게시글입니다.")
 
-        val result = FeedShowResponseDTO(
-            id = target.id,
-            title = target.title,
-            content = target.content,
-            type = when (target.type) {
-                true -> FeedType.NORMAL
-                false -> FeedType.ROUTINE
-            },
-            weekDay = target.weekDay,
-            createAt = target.createdAt,
-            updateAt = target.updatedAt,
-            nickName = target.member.nickName,
-            like = target.likeCount
+        val comments = commentRepository.findByFeed(feed).map { comment ->
+            CommentResponseDTO(
+                id = comment.id!!,
+                content = comment.content,
+                createdAt = comment.createdAt!!,
+                authorId = comment.author.id!!,
+                authorNickname = comment.author.nickName,
+                parentCommentId = comment.parentComment?.id
+            )
+        }
+
+        val feedResponse = FeedShowResponseDTO(
+            id = feed.id,
+            title = feed.title,
+            content = feed.content,
+            type = if (feed.type) FeedType.NORMAL else FeedType.ROUTINE,
+            weekDay = feed.weekDay,
+            createAt = feed.createdAt,
+            updateAt = feed.updatedAt,
+            nickName = feed.member.nickName,
+            like = feed.likeCount
         )
 
-        return result
+        return FeedDto.FeedWithCommentsResponseDTO(
+            feed = feedResponse,
+            comments = comments
+        )
     }
 
     fun searchFeed(

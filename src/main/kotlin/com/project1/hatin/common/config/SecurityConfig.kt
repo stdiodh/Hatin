@@ -35,8 +35,8 @@ class SecurityConfig(
             }
             .authorizeHttpRequests {
                 it.requestMatchers("/api/member/join", "/api/member/login", "/api/feed/list/**"
-                    ,"/api/feed/search/**","/api/feed/get/{id}", "api/feed/recommended").anonymous()
-                    .requestMatchers("/api/feed/search/**").permitAll()
+                    ,"/api/feed/search/**","/api/feed/get/{id}", "api/feed/recommended", "api/member/admin/create").anonymous()
+                    .requestMatchers("/api/member/admin/delete/**").hasRole("ADMIN")
                     .requestMatchers("/api/member/info", "/api/friend/**", "/api/feed/**").hasRole("MEMBER")
                     .anyRequest().permitAll()
             }

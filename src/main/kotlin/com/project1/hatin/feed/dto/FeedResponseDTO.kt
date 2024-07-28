@@ -37,7 +37,7 @@ class FeedResponseDTO {
         val createAt : LocalDateTime?,
         val updateAt : LocalDateTime?,
         val nickName : String,
-        val like: Int
+        val like: Int,
     )
 
     data class FeedSearchResponseDTO(

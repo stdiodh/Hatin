@@ -4,6 +4,7 @@ import com.project1.hatin.common.dto.BaseResponse
 import com.project1.hatin.common.dto.CustomUser
 import com.project1.hatin.common.enums.DayOfWeek
 import com.project1.hatin.common.enums.FeedType
+import com.project1.hatin.feed.dto.FeedDto
 import com.project1.hatin.feed.service.FeedService
 import io.swagger.v3.oas.annotations.tags.Tag
 import com.project1.hatin.feed.dto.FeedRequestDTO.FeedPatchRequestDTO
@@ -39,9 +40,9 @@ class FeedController(
 
     @Operation(summary = "게시글 조회", description = "게시글 조회 API 입니다.")
     @GetMapping("/get/{id}")
-    private fun showFeed(@Parameter(required = true,description = "게시글 ID") @PathVariable(name = "id") id : Long)
-    : ResponseEntity<BaseResponse<FeedShowResponseDTO>> {
-        val result = feedService.showFeed(id)
+    fun showFeedWithComments(@Parameter(required = true, description = "게시글 ID") @PathVariable(name = "id") id: Long)
+            : ResponseEntity<BaseResponse<FeedDto.FeedWithCommentsResponseDTO>> {
+        val result = feedService.showFeedWithComments(id)
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponse(data = result))
     }
 
