@@ -82,13 +82,4 @@ class CommentController(
         commentService.deleteComment(commentId, userInfo)
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponse(data = "댓글이 삭제되었습니다."))
     }
-
-    @Operation(summary = "게시글의 댓글 조회", description = "특정 게시글의 모든 댓글을 조회하는 API입니다.")
-    @SecurityRequirement(name = "bearerAuth")
-    @GetMapping("/{feedId}/comments")
-    fun getCommentsForFeed(@Parameter(required = true,description = "피드 ID") @PathVariable feedId: Long)
-    : ResponseEntity<BaseResponse<List<CommentResponseDTO>>> {
-        val result = commentService.getCommentsForFeed(feedId)
-        return ResponseEntity.status(HttpStatus.OK).body(BaseResponse(data = result))
-    }
 }

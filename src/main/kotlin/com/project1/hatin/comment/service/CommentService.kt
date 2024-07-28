@@ -13,12 +13,12 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 
 @Service
+@Transactional
 class CommentService(
     private val commentRepository: CommentRepository,
     private val feedRepository: FeedRepository,
     private val memberRepository: MemberRepository
 ) {
-    @Transactional
     fun addParentCommentToFeed(feedId: Long, commentRequestDTO: CommentRequestDTO, userInfo: CustomUser): CommentResponseDTO {
         val feed = feedRepository.findByIdOrNull(feedId)
             ?: throw PostException("존재하지 않는 게시글입니다.")
@@ -44,7 +44,6 @@ class CommentService(
         )
     }
 
-    @Transactional
     fun addChildCommentToFeed(feedId: Long, commentRequestDTO: CommentRequestDTO, userInfo: CustomUser): CommentResponseDTO {
         val feed = feedRepository.findByIdOrNull(feedId)
             ?: throw PostException("존재하지 않는 게시글입니다.")
@@ -75,8 +74,6 @@ class CommentService(
         )
     }
 
-
-    @Transactional
     fun patchComment(commentId: Long, commentRequestDTO: CommentRequestDTO, userInfo: CustomUser): CommentResponseDTO {
         val author = memberRepository.findByIdOrNull(userInfo.id)
             ?: throw PostException("존재하지 않는 사용자입니다.")
@@ -102,7 +99,6 @@ class CommentService(
         )
     }
 
-    @Transactional
     fun deleteComment(commentId: Long, userInfo: CustomUser) {
         val author = memberRepository.findByIdOrNull(userInfo.id)
             ?: throw PostException("존재하지 않는 사용자입니다.")
@@ -115,22 +111,5 @@ class CommentService(
         }
 
         commentRepository.deleteById(commentId)
-    }
-
-    @Transactional
-    fun getCommentsForFeed(feedId: Long): List<CommentResponseDTO> {
-        val feed = feedRepository.findByIdOrNull(feedId)
-            ?: throw PostException("존재하지 않는 게시글입니다.")
-
-        return commentRepository.findByFeed(feed).map { comment ->
-            CommentResponseDTO(
-                id = comment.id!!,
-                content = comment.content,
-                createdAt = comment.createdAt!!,
-                authorId = comment.author.id!!,
-                authorNickname = comment.author.nickName,
-                parentCommentId = comment.parentComment?.id
-            )
-        }
     }
 }
