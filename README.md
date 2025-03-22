@@ -1,27 +1,41 @@
 ## hatin
-A&I 2기 1팀의 미니 프로젝트 입니다!
+A&I 2기 1팀의 미니 프로젝트입니다!
 
 ## 👨‍🏫 프로젝트 소개
-hatin은 '하'루루'틴'의 줄인 말이며 생활패턴 추천 비서의 역할을 합니다.
+hatin은 **'하'루루'틴'**의 줄임말로, 생활 패턴을 추천해 주는 비서 역할을 합니다.
 
 ## ⏲️ 개발 기간
-+ 24/06/22 ~ 24/07/31 동안 개발 예정이며 <br>
-+ Back-End repository 입니다. <br>
+개발 기간: 2024년 6월 22일 ~ 2024년 7월 31일
+Back-End Repository입니다.
 
 ## ⚙️ 기술 스택
+### ✔️Back-end
 <table>
   <tr>
-    <th scope="col">Amazon EC2</th>
-    <th scope="col">Mysql</th>
-    <th scope="col">Spring</th>
-    <th scope="col">SpringBoot</th>
+    <th scope="col">Kotlin</th>
+    <th scope="col">Spring Boot</th>
+    <th scope="col">MySql</th>
+    <th scope="col">AWS EC2</th>
   </tr>
   <tr>
+    <th scope="col"><img src = "https://simpleicons.org/icons/kotlin.svg" width = "50" height = "50"></th>
+    <th scope="col"><img src = "https://simpleicons.org/icons/springboot.svg" width = "50" height = "50"></th>
+    <th scope="col"><img src = "https://simpleicons.org/icons/mysql.svg" width = "50" height = "50"></th>
     <th scope="col"><img src = "https://simpleicons.org/icons/amazonec2.svg" width = "50" height = "50"></th>
-    <th scope="col"><img src="https://camo.githubusercontent.com/69fa8ed185f6026de241b4a3eb05855be4660cbc2d36f01b9e9b64e32e0472da/68747470733a2f2f74656368737461636b2d67656e657261746f722e76657263656c2e6170702f6d7973716c2d69636f6e2e737667" width = "50" height = "50"></th>
-    <th scope="col"><img src = "https://camo.githubusercontent.com/491e3e316785d254f8709adfeb919a68582e0bef2946e15195e1f66de5e98b10/68747470733a2f2f7777772e766563746f726c6f676f2e7a6f6e652f6c6f676f732f737072696e67696f2f737072696e67696f2d69636f6e2e737667" width = "50" height = "50"></th>
-    <th scope="col"><img src="https://camo.githubusercontent.com/8e4f6013cddadec00c5ff9bd422bb69d779606e0b0d18e7a40b74a01b534e8d7/68747470733a2f2f74312e6461756d63646e2e6e65742f6366696c652f746973746f72792f323730333444344635384536363046363136" width = "50" height = "50"></th>
   </tr>
 </table>
 
+## 📌 주요 기능
+- 사용자의 생활 패턴을 분석하여 맞춤 루틴 추천
+- 일정 및 루틴 관리 기능 제공
+- 사용자의 피드백을 반영하여 추천 최적화
+
+## 📢 기여 방법
+- 레포지토리를 포크합니다.
+- 새로운 브랜치를 생성합니다.
+- 기능을 추가하거나 수정합니다.
+- PR(Pull Request)을 생성하여 팀원들과 논의합니다.
+
+## 📬 문의
+- 프로젝트에 대한 문의 사항은 팀원들에게 직접 연락 바랍니다.
 
